@@ -63,9 +63,9 @@ const First = styled.h3`
 const SecondLine = styled.span`
   display: flex;
   flex-direction: row;
-  gap: 5px;
+  gap: 10px;
   margin: 0;
-
+  opacity: 0.7;
   font-size: 10px;
 `;
 const Name = styled.div``;
@@ -75,8 +75,6 @@ const Status = styled.div`
 `;
 
 export default function HomeUserBox({ item }) {
-  let latestImage = item.sessionImages[0];
-
   return (
     <Container>
       {getTheImage()}
@@ -86,8 +84,11 @@ export default function HomeUserBox({ item }) {
         </First>
 
         <SecondLine>
+          <Duration>
+            This Month: {Math.floor(item.monthsDuration / 2)} Mins
+          </Duration>
           <Duration>Today: {Math.floor(item.todaysDuration / 2)} Mins</Duration>
-          <Rank>Rank {item.rank}</Rank>
+          <Duration>Rank {item.rank}</Duration>
         </SecondLine>
 
         <Status>{item.status}</Status>
