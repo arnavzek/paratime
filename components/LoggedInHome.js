@@ -21,6 +21,9 @@ const Header = styled.div`
 `;
 const Main = styled.div`
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
 `;
 const Brading = styled.div`
   display: flex;
@@ -52,8 +55,8 @@ const StartButton = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 80px 0;
-  margin-top: 60px;
+  margin: 0 0;
+  margin-top: 30px;
   height: 100px;
   font-size: 30px;
   justify-content: center;
@@ -130,7 +133,7 @@ export default function LoggedInHome() {
           <BarChart data={getStatData()} />
         </Box>
         <Box>
-          <BoxTitle>Montly Ranking</BoxTitle>
+          <BoxTitle>Monthly Ranking</BoxTitle>
           <MonthlyRankingItems>
             <HomeUserBox item={getYou()} />
             {renderUsers()}
