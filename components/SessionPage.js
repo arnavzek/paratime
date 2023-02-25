@@ -162,7 +162,7 @@ const SectionHeading = styled.h3`
   font-weight: 100;
 `;
 
-const pomodoroOptions = [0.2, 30, 60, 120, "OFF"];
+const pomodoroOptions = [30, 60, 120, "OFF"];
 
 const Message = styled.div`
   width: 100%;
