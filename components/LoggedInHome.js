@@ -10,7 +10,15 @@ import LoadingSection from "./LoadingSection";
 import BarChart from "react-svg-bar-chart";
 import { useState } from "react";
 
-const Container = styled.div``;
+const Container = styled.div`
+  @media (min-width: 800px) {
+    width: 62vw;
+    border-left: 1px solid #999;
+    border-right: 1px solid #999;
+    overflow-y: scroll;
+    height: 100vh;
+  }
+`;
 const Header = styled.div`
   padding: 20px 20px;
   display: flex;
@@ -23,6 +31,9 @@ const Main = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
+
+  align-items: center;
+
   gap: 50px;
 `;
 const Brading = styled.div`
@@ -41,7 +52,9 @@ const TheBrand = styled(Brand)`
   margin: 0;
 `;
 const Links = styled.div``;
-const Box = styled.div``;
+const Box = styled.div`
+  width: 100%;
+`;
 const BoxTitle = styled.h3``;
 const BoxList = styled.div`
   display: flex;
@@ -57,6 +70,7 @@ const StartButton = styled.div`
   flex-direction: column;
   margin: 0 0;
   margin-top: 30px;
+  cursor: pointer;
   height: 100px;
   font-size: 30px;
   justify-content: center;
@@ -87,6 +101,10 @@ const StartButton = styled.div`
     border-radius: 500px;
     width: 85%;
     background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  @media (min-width: 800px) {
+    width: 38vw;
   }
 `;
 

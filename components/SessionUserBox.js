@@ -13,6 +13,10 @@ const Container = styled.div`
   flex-direction: column;
   gap: 10px;
   position: relative;
+
+  @media (min-width: 800px) {
+    width: calc(62vw - 40px);
+  }
 `;
 
 const Images = styled.div`
@@ -34,6 +38,11 @@ const TheImage = styled.img`
   width: calc((100vw - 40px) / 4);
   filter: grayscale(1);
   object-fit: cover;
+
+  @media (min-width: 800px) {
+    height: calc((62vw - 40px) / 4);
+    width: calc((62vw - 40px) / 4);
+  }
 `;
 const BottomLabel = styled.div`
   backdrop-filter: blur(20px);
@@ -81,17 +90,14 @@ export default function SessionUserBox({ item }) {
   return (
     <Container>
       <Images>{images}</Images>
-
       <BottomLabel>
         <First>
           <Name>{item.name}</Name>
         </First>
-
         <SecondLine>
           <Duration>Today: {Math.floor(item.todaysDuration / 2)} Mins</Duration>
           <Rank>Rank {item.rank}</Rank>
         </SecondLine>
-
         <Status>{item.status}</Status>
       </BottomLabel>
     </Container>

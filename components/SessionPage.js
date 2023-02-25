@@ -17,10 +17,19 @@ import initImageCapture from "../controllers/initImageCapture";
 import getImageURL from "../controllers/frontend/getImageURL";
 // import ImageCapture from "image-capture";
 
-const Container = styled.div``;
+const Container = styled.div`
+  @media (min-width: 800px) {
+    width: 62vw;
+    border-left: 1px solid #999;
+    border-right: 1px solid #999;
+    overflow-y: scroll;
+    height: 100vh;
+  }
+`;
 const Header = styled.div`
   background-color: #222;
   gap: 10px;
+  cursor: pointer;
   flex-direction: row;
   display: flex;
   align-items: center;
@@ -45,6 +54,10 @@ const Main = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 20px;
+
+  @media (min-width: 800px) {
+    width: 62vw;
+  }
 `;
 const BottomButtons = styled.div`
   padding: 20px;
@@ -54,6 +67,10 @@ const BottomButtons = styled.div`
   background-color: #222;
   width: 100vw;
   justify-content: space-between;
+
+  @media (min-width: 800px) {
+    width: 62vw;
+  }
 `;
 const LastImage = styled.img`
   height: 76px;
@@ -67,6 +84,14 @@ const Timer = styled.div`
   font-size: 52px;
   justify-content: space-between;
   height: 190px;
+
+  @media (min-width: 800px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 45px;
+    font-size: 125px;
+  }
 `;
 const Time = styled.h1`
   height: 85px;

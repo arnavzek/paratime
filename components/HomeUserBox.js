@@ -14,6 +14,10 @@ const Container = styled.div`
   height: 76px;
   gap: 10px;
   position: relative;
+
+  @media (min-width: 800px) {
+    width: calc(62vw - 40px);
+  }
 `;
 
 const Images = styled.div`

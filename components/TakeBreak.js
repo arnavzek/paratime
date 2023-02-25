@@ -74,6 +74,7 @@ export default function TakeBreak() {
 
   return (
     <Container>
+      <Brand />
       <Heading>Take a break</Heading>
       <List>
         <Button onClick={startTimer(5)}>5 Min</Button>
