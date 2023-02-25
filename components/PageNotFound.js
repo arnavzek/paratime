@@ -46,10 +46,6 @@ export default function PageNotFound() {
 
         <Message>
           <Main>404</Main>
-          {/* <Main2>PAGE NOT FOUND</Main2> */}
-          <Secondary>
-            Something's wrong I can feel it - <i>Eminem</i>
-          </Secondary>
         </Message>
 
         <HomeButton onClick={getHomeLink}>Home</HomeButton>
