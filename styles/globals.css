@@ -1,0 +1,85 @@
+html,
+body {
+  height: 100vh;
+  width: 100vw;
+  padding: 0 0;
+  overflow: hidden;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+  color:var(--homeProminantColor);
+  background:var(--homeDominantColor);
+  font-family: var(--prominantFont), Raleway, Roboto, -apple-system, BlinkMacSystemFont, Segoe UI Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif !important;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+.carousel .control-dots{
+  text-align: lef !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap:5px;
+  margin-top: 200px !important;
+  opacity:0.5 !important;
+}
+
+:root{
+  --accentFont:Raleway;
+  --prominantFont:Roboto;
+  --dominantFont:Raleway;
+  --homeProminantColor: #ffffff;
+  --homeDominantColor: #111111;
+  --prominantColor: #ffffff;
+  --dominantColor: #111111;
+  --homeTranslucentColorHard: rgba(0,0,0,0.3);
+  --homeTranslucentColor: rgba(0,0,0,0.1);
+}
+
+a {
+  color: inherit;
+  /* text-decoration: none; */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--translucentColorHard); 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  width:20px;
+}
+
+iframe{
+  border:none !important;
+}
+
+.chrome-picker{
+  width: 100% !important;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--homeProminantColor);
+  opacity: 0.8; /* Firefox */
+}

@@ -1,0 +1,26 @@
+runtime: nodejs14
+
+# redirects all http req to https
+handlers:
+- url: /.*
+  secure: always
+  redirect_http_response_code: 301
+  script: auto
+
+env_variables:
+  NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID : 1012677660729-nd0ael59u41657lkq5v0itk029u2ch7e.apps.googleusercontent.com
+  GOOGLE_OAUTH_SECRET : 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
+  NEXT_PUBLIC_PRODUCTION : NO
+  IP_REGISTRY : wpe57ahm90espc84
+  NEXT_PUBLIC_USER_JWT_COOKIE_NAME : saffron-user-jwt
+  NEXT_PUBLIC_USER_ID_COOKIE_NAME : saffron-user-id
+  NEXT_PUBLIC_COOKIE_EXPIRY_IN_DAYS : 30000
+  NEXT_PUBLIC_LOCALSTORAGE_NAME : saffron-localstorage
+  UNSPLASH_API_KEY : ZqgPJd_icWXOFxx4IWI3FYRt9udd34LYJBidT8RkgO0
+  JWT_SECRET : iWillMakeIndiaCool@1000
+  DATABASE_LINK : mongodb+srv://itsarnavsingh:ding-dong-ting-tong@cluster0.zijxk.mongodb.net/saffron?retryWrites=true&w=majority&ssl=true
+  GIPHY_API : lify8yzIonZdrVVGJkMxb7tj7svoNuok
+  UPDATE_DERAIVATIVE_AT : 24
+  CLOUDSTORAGE_PROJECT_ID : saffron-1
+  CLOUDSTORAGE_PRIVATE_KEY : -----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC7eQNKPYxu2zRu\n+lTXC6vCxO6/PK+nL11oDrGk4M58jQ3c9SBV56d64QnOBBglQK1t2rmDdsN8tKk/\nUkSZYBussJr14OUQ6nmA+i6kWKFMa7od1/ABVX0xmmgvdV/jiCJ76qoBoSWP5kco\n+v92R+HK8Kff5hbYSyYxJ8TD/BAEevsjFy8IXFpkLNQW6u950fu5RKBH3edsxEeo\nsq5mahkETxIEdwPX6ewU02DZMjkfb4MyppBPGORm55nqeru4TmdoSQ4a/ePa1Gjx\n7h63KVMzonzYX30Q/PR3X4MJyEcmMtyoF/UeIsJqI0yrNl/tTSeTKnbmXe5bRZHG\n1Jz5bvppAgMBAAECggEAHVosFrKeSzkM85dEM0tDgEI/Mzf4NI/o6wLp82uzSLL5\nCbBjeK/FfCrB0zy23xZKURne0+ODZgIPQbfKv8zZaGdaS8cDdmuPzI7fQKIT1xhC\n0qtdi4fsCxkm2M9izQgihg5OweSOMgKW/6aU2tsUUibt0dN/nivd9fJJD3pms5yc\noCYRt8cPN00oA7784xFPrtwF83uGWfatLxTZAmsfYcZigr6NLMPoocO59+1lAsUj\nOZSSB2vs85ldEJHejTfkvio2RBiNU1KXX+QBFRWjda9yDbX0rCB04uH+4t0Wclt3\nMkBu7HOKAElN/TYDenTV3g3JGyumQbr0USM3KAeF5QKBgQD24UH16vewoygQoayc\nicGlO+K5A+ZMvk5HfedebHSSk9Srp0rK0yNp+LOBIrzaOS8Kz47gtahLd5ZOh+zP\nmHfdNyFI+d+0daz1DtoeYlN6S9nvnPkas1motKSoQUirjbT2HC8q2buHFZrTrW4z\ntqaHTajf4MghY8/fqupkC6zLbwKBgQDCZfEE+b8z3JpMh4GFNVEcer7Ehitm80tI\n2WKmV7aouLxbgguqoLQcbTMEK+75Dd3sKB5bZbJz+PcDVZuKmODxxzLi73/MppjT\n5y9rtX584tIp218jt5mj8kKoKl+XN/Emf1goRvyDqUbTSxLHCMMcC6IxrkU0i3Ny\n/HdTXk+LpwKBgDslal0VRvQNkqqxYR47rqX8e+vhcEpQiYZ9NnIbv63iNuBM+xEu\nllxsFe1JOj951bhcU5moS8KQyvTTgbuWhpj7/UBzhNHCI4auYTlIS0GQbI0IaXGp\nKEDPzmb1BQj8sS8JP4+fjFrnpSkzcqR3DNx7kYrZWnkNZZ7rXq5LUcGHAoGAcTZb\nOjGUh8iG1+DmrkRRu4tEhEE7D5bLFl77k7JrfzEvCP/geXtjyVZTKq/HWaYYw0rN\n+x5r4hxxBrEZh4rnHgeLfBxMykuPn4D43fpx8ptKF/RZIPzw7kjNRxB+YRvERk5N\ncg99SdQQmkcTZXSV5ERmLha22RYJo0Ki35uCKesCgYBzweTe54qSWU/d5dxSK3fO\n3rrtSVxvEPb2SXhFEvT8oSyaaNSI6uo0Ri1W6nQxjSV8X04xgQkRCT4p+LOkGct6\nWlVTdZ2pIMWL+J7dOqIk2NgxIqxqa1HcdYdFilMWVBveMGZK6vlUpP+JcO3tB8Zv\noJz10UF5MSAkc3C0RQwZ6w==\n-----END PRIVATE KEY-----\n
+  CLOUDSTORAGE_CLIENT_EMAIL : saffron-cloud-storage-service@saffron-1.iam.gserviceaccount.com
