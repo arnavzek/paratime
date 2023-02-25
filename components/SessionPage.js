@@ -325,13 +325,13 @@ export default function SessionPage() {
   }
 
   function getYouRank() {
-    let rank = 0;
+    let rank = "NA";
 
     sessionData.allOnlineUsers.map((item, index) => {
       if (item._id == loggedInUserID) rank = index;
     });
 
-    rank += 1;
+    if (rank !== "NA") rank += 1;
 
     return rank;
   }

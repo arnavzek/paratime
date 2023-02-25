@@ -75,12 +75,11 @@ const Status = styled.div`
 `;
 
 export default function HomeUserBox({ item }) {
+  let latestImage = item.sessionImages[0];
+
   return (
     <Container>
-      {item.sessionImages[0] ? (
-        <TheImage src={getImageURL(item.sessionImages[0])} />
-      ) : null}
-
+      {getTheImage()}
       <BottomLabel>
         <First>
           <Name>{item.name}</Name>
@@ -95,4 +94,11 @@ export default function HomeUserBox({ item }) {
       </BottomLabel>
     </Container>
   );
+
+  function getTheImage() {
+    if (!item.sessionImages.length) return null;
+    let latestImage = item.sessionImages[item.sessionImages.length - 1];
+
+    return <TheImage src={getImageURL(latestImage)} />;
+  }
 }

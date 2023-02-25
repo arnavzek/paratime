@@ -81,7 +81,10 @@ const Status = styled.div`
 export default function SessionUserBox({ item }) {
   let images = [];
 
-  item.sessionImages.map((item, index) => {
+  let theImages = [...item.sessionImages];
+  theImages = theImages.reverse();
+
+  theImages.map((item, index) => {
     if (index < 4) {
       images.push(<TheImage src={getImageURL(item)} />);
     }

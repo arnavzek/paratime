@@ -211,13 +211,13 @@ export default function LoggedInHome() {
   }
 
   function getYouRank() {
-    let rank = 0;
+    let rank = "NA";
 
     homeData.monthlyRanking.map((item, index) => {
       if (item._id == loggedInUserID) rank = index;
     });
 
-    rank += 1;
+    if (rank !== "NA") rank += 1;
 
     return rank;
   }
