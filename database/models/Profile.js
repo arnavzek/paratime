@@ -20,6 +20,8 @@ let profile = new mongoose.Schema(
     dailyUsageStat: { type: Object },
     todaysDuration: { type: Number },
     monthsDuration: { type: Number },
+    bio: { type: String },
+    tags: [{ type: String }],
     storageUsage: { type: Number },
     name: { type: String },
     email: { type: String },

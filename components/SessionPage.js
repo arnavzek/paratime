@@ -15,15 +15,16 @@ import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import Link from "next/link";
 import initImageCapture from "../controllers/initImageCapture";
 import getImageURL from "../controllers/frontend/getImageURL";
+import initScreenshotCapture from "../controllers/initScreenshotCapture";
+import WithHeader from "./WithHeader";
 // import ImageCapture from "image-capture";
 
 const Container = styled.div`
   @media (min-width: 800px) {
-    width: 62vw;
-    border-left: 1px solid #999;
-    border-right: 1px solid #999;
-    overflow-y: scroll;
-    height: 100vh;
+    width: 80vw;
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
   }
 `;
 const Header = styled.div`
@@ -47,37 +48,40 @@ const SubTitle = styled.span`
   padding: 0;
 `;
 const Main = styled.div`
-  padding: 20px;
-  width: 100vw;
+  padding: 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  width: 100%;
   flex-wrap: wrap;
   gap: 20px;
-
-  @media (min-width: 800px) {
-    width: 62vw;
-  }
 `;
 const BottomButtons = styled.div`
-  padding: 20px;
+  padding: 15px;
   display: flex;
   flex-direction: row;
   backdrop-filter: blur(50px);
+  border-radius: 5px;
+  gap: 20px;
   background-color: #222;
-  width: 100vw;
   justify-content: space-between;
 
   @media (min-width: 800px) {
-    width: 62vw;
+    flex-direction: column;
+    display: flex;
+    width: 18vw;
+    height: calc(100vh - 120px);
+    justify-content: space-between;
   }
 `;
+
 const LastImage = styled.img`
   height: 76px;
   width: 76px;
   object-fit: cover;
   border-radius: 5px;
 `;
+
 const Timer = styled.div`
   display: flex;
   flex-direction: column;
@@ -86,13 +90,13 @@ const Timer = styled.div`
   height: 190px;
 
   @media (min-width: 800px) {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 45px;
-    font-size: 125px;
+    gap: calc(18vw / 3);
+    height: auto;
+    padding-bottom: 50px;
+    font-size: calc(18vw / 3);
   }
 `;
+
 const Time = styled.h1`
   height: 85px;
   margin: 0;
@@ -112,7 +116,7 @@ const Button = styled.button`
   flex-direction: row;
   cursor: pointer;
   color: #fff;
-  width: 180px;
+  width: calc(45vw - 15px);
   padding: 0 15px;
   border-radius: 5px;
   overflow: hidden;
@@ -121,6 +125,10 @@ const Button = styled.button`
   align-items: center;
   font-size: 15px;
   background-color: #111;
+
+  @media (min-width: 800px) {
+    width: 100%;
+  }
 `;
 
 const StartButton = styled(Button)`
@@ -157,19 +165,51 @@ const EvenButton = styled(Button)`
 //ON, OFF30,
 const BackButton = styled.div``;
 
-const SectionHeading = styled.h3`
+const SectionHeading = styled.h1`
   text-align: center;
   font-weight: 100;
+  margin-top: 0;
 `;
 
 const pomodoroOptions = [30, 60, 120, "OFF"];
 
 const Message = styled.div`
   width: 100%;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+`;
+
+const MessageContainer = styled.div`
+  width: 100%;
   height: 50vh;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  gap: 50px;
   align-items: center;
+`;
+
+const RankingSection = styled.div`
+  @media (min-width: 800px) {
+    width: auto;
+    padding-left: 50px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+const AllowScreenshare = styled.button`
+  background: transparent;
+  padding: 15px 25px;
+  font-size: 15px;
+  cursor: pointer;
+  color: #fff;
+  border: 1px solid #999;
+  border-radius: 50px;
 `;
 
 export default function SessionPage() {
@@ -178,28 +218,31 @@ export default function SessionPage() {
   const [sessionData, setSessionData] = useState(null);
   const { loggedInUserID } = useContext(Context);
   const [error, setError] = useState(false);
-  const [totalTimer, setTotalTimer] = useState(0);
+  const [sessionTag, setSessionTag] = useState("work");
   const [pomodoroTimer, setPodoroTimer] = useState(30);
-  const [timer, setTimer] = useState(0);
-  const [webcamImage, setWebcamImage] = useState(null);
+  const [timer, setTimer] = useState(60 * 60);
+  const [screenshareEnabled, setScreenshareStatus] = useState(false);
   const router = useRouter();
 
   if (typeof window !== "undefined") {
     window.sessionStatus = sessionStatus;
     window.webcamEnabled = webcamEnabled;
     window.timer = timer;
-    window.totalTimer = totalTimer;
     window.pomodoroTimer = pomodoroTimer;
   }
 
   useEffect(handleVideoPermission, []);
 
   useEffect(() => {
-    if (webcamEnabled) {
-      setSessionStatus("ON");
-      setTimer(0);
+    if (router.isReady) {
+      const { duration } = router.query;
+
+      if (webcamEnabled && screenshareEnabled) {
+        setSessionStatus("ON");
+        setTimer(parseInt(duration) * 60);
+      }
     }
-  }, [webcamEnabled]);
+  }, [router.query, webcamEnabled, screenshareEnabled]);
 
   useEffect(() => {
     if (window.featchInterval) window.clearInterval(window.featchInterval);
@@ -235,19 +278,14 @@ export default function SessionPage() {
 
     window.timerController = setInterval(() => {
       if (window.sessionStatus == "ON") {
-        setTimer(window.timer + 1);
+        setTimer(window.timer - 1);
 
         let mins = window.timer / 60;
 
-        if (typeof window.pomodoroTimer == "number") {
-          // console.log(window.pomodoroTimer, mins);
-          if (mins > window.pomodoroTimer) {
-            pauseSession();
-            router.push("/break");
-          }
+        if (window.timer <= 0) {
+          pauseSession();
+          router.push("/break");
         }
-
-        setTotalTimer(window.totalTimer + 1);
       }
     }, 1000);
   }, []);
@@ -256,63 +294,139 @@ export default function SessionPage() {
 
   if (!loggedInUserID)
     return (
-      <Container>
-        <Message>Login Required</Message>
-      </Container>
+      <WithHeader>
+        <MessageContainer>
+          <Message>Login Required</Message>
+        </MessageContainer>
+      </WithHeader>
+    );
+
+  if (error == "Screenshare Error: Permission denied")
+    return (
+      <WithHeader>
+        <MessageContainer>
+          <Message>
+            You denied screenshare permission. Without screenshare the session
+            can't start, this is meant to prevent cheating
+          </Message>
+
+          <AllowScreenshare onClick={allowScreenshare}>
+            Allow Screenshare
+          </AllowScreenshare>
+        </MessageContainer>
+      </WithHeader>
     );
 
   if (error)
     return (
-      <Container>
-        <Message>{error}</Message>
-      </Container>
+      <WithHeader>
+        <MessageContainer>
+          <Message>{error}</Message>
+        </MessageContainer>
+      </WithHeader>
     );
 
   if (!webcamEnabled)
     return (
-      <Container>
-        <Message>Webcam Required</Message>
-      </Container>
+      <WithHeader>
+        <MessageContainer>
+          <Message>Webcam Required</Message>
+        </MessageContainer>
+      </WithHeader>
+    );
+
+  if (!screenshareEnabled)
+    return (
+      <WithHeader>
+        <MessageContainer>
+          <Message>
+            Please allow Screenshare so that there is evidence of your work.
+            Don't worry about privacy we will blur the screenshare
+          </Message>
+
+          <AllowScreenshare onClick={allowScreenshare}>
+            Allow Screenshare
+          </AllowScreenshare>
+        </MessageContainer>
+      </WithHeader>
     );
 
   if (!sessionData) return <LoadingSection />;
 
-  if (!sessionData.me.continiousDuration) sessionData.me.continiousDuration = 0;
+  // if (screenshareEnabled)
+  //   return (
+  //     <>
+  //       <video
+  //         src={window.screenshareStream}
+  //         id="gum-local"
+  //         autoplay
+  //         playsinline
+  //         muted
+  //       ></video>
+  //       <button onClick={takeScreenshot}>Take screenshot</button>
+
+  //       <img src={webcamImage} />
+  //     </>
+  //   );
 
   return (
-    <Container>
-      <BottomButtons>
-        <Buttons>
-          <Link href="/">
-            <Header>
-              {/* <BackButton> */}
-              <MdOutlineArrowBackIosNew />
-              {/* </BackButton> */}
-              <Title>Back</Title>
-            </Header>
-          </Link>
-          {getTimerButtons()}
-          <PomodoroButton
-            sessionStatus={sessionStatus}
-            onClick={updatePodoro}
-            value={pomodoroTimer}
-          />
-        </Buttons>
-        <Timer>
-          <Time>{minAndSecs.mins}</Time>
-          <Time>{minAndSecs.secs}</Time>
-        </Timer>
-      </BottomButtons>
+    <WithHeader>
+      <Container>
+        <BottomButtons>
+          <Buttons>
+            <Link href="/">
+              <Header>
+                <MdOutlineArrowBackIosNew />
+                <Title>Back</Title>
+              </Header>
+            </Link>
+            {getTimerButtons()}
+            <PomodoroButton
+              sessionStatus={sessionStatus}
+              onClick={updatePodoro}
+              value={pomodoroTimer}
+            />
+          </Buttons>
+          <Timer>
+            <Time>{minAndSecs.mins}</Time>
+            <Time>{minAndSecs.secs}</Time>
+          </Timer>
+        </BottomButtons>
 
-      <SectionHeading>Ranking</SectionHeading>
+        <RankingSection>
+          <SectionHeading>Ranking</SectionHeading>
 
-      <Main>
-        <SessionUserBox item={getYou()} />
+          <Main>
+            <SessionUserBox item={getYou()} />
 
-        {renderUsers()}
-      </Main>
-    </Container>
+            {renderUsers()}
+          </Main>
+        </RankingSection>
+      </Container>
+    </WithHeader>
   );
+
+  function allowScreenshare() {
+    initScreenshotCapture(onSuccess, onError, onEnd);
+
+    function onEnd() {
+      setScreenshareStatus(false);
+      pauseSession();
+    }
+
+    function onSuccess() {
+      setScreenshareStatus(true);
+
+      if (error == "Screenshare Error: Permission denied") {
+        setError(null);
+      }
+    }
+
+    function onError(err) {
+      console.log(err);
+      setError("Screenshare Error: " + err.message);
+    }
+  }
 
   function getYou() {
     if (!sessionData) return null;
@@ -420,10 +534,31 @@ export default function SessionPage() {
     return sessData;
   }
 
-  async function postAttendance(newSessionData) {
-    if (!loggedInUserID) return;
-    if (!window.theMediaSteam) return;
+  async function makePostAttendanceReq(blob, newSessionData) {
+    let imageUploaded = await compressAndUploadFile(
+      newSessionData.imageToRemove,
+      blob
+    );
 
+    console.log(imageUploaded, getImageURL(imageUploaded.fileName));
+    serverLine.post("/attendance", {
+      newImage: imageUploaded.fileName,
+      sessionTag: sessionTag,
+      imageToRemove: newSessionData.imageToRemove,
+    });
+  }
+
+  function takeScreenshot(newSessionData) {
+    window.captureScreenshot().then((blob, itemURL) => {
+      console.log(itemURL);
+      console.log("Screenshot captured");
+
+      blob.name = "screenshare.jpeg";
+      makePostAttendanceReq(blob, newSessionData);
+    });
+  }
+
+  function captureWebcamImage(newSessionData) {
     let videoDevice = theMediaSteam.getVideoTracks()[0];
     let captureDevice = new ImageCapture(videoDevice);
 
@@ -432,28 +567,33 @@ export default function SessionPage() {
       captureDevice
         .takePhoto()
         .then(async (blob) => {
-          setWebcamImage(window.URL.createObjectURL(blob));
           console.log(blob);
           console.log(window.URL.createObjectURL(blob));
 
           try {
             blob.name = "webcam.jpeg";
-            let imageUploaded = await compressAndUploadFile(
-              newSessionData.imageToRemove,
-              blob
-            );
-
-            console.log(imageUploaded, getImageURL(imageUploaded.fileName));
-            serverLine.post("/attendance", {
-              newImage: imageUploaded.fileName,
-              imageToRemove: newSessionData.imageToRemove,
-            });
+            makePostAttendanceReq(blob, newSessionData);
           } catch (e) {
             return console.log(e);
           }
         })
         .catch(console.log);
     }
+  }
+
+  async function postAttendance(newSessionData) {
+    if (!loggedInUserID) return;
+    if (!window.theMediaSteam) return;
+    if (!webcamEnabled) return;
+    if (!screenshareEnabled) return;
+
+    if (window.webcamTurn) {
+      captureWebcamImage(newSessionData);
+    } else {
+      takeScreenshot(newSessionData);
+    }
+
+    window.webcamTurn = window.webcamTurn ? false : true;
   }
 
   function startSession() {

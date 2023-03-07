@@ -12,11 +12,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   height: 76px;
+  padding-right: 10px;
   gap: 10px;
   position: relative;
 
   @media (min-width: 800px) {
-    width: calc(62vw - 40px);
+    width: auto;
   }
 `;
 

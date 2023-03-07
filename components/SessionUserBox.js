@@ -15,7 +15,7 @@ const Container = styled.div`
   position: relative;
 
   @media (min-width: 800px) {
-    width: calc(62vw - 40px);
+    width: auto;
   }
 `;
 
@@ -23,11 +23,15 @@ const Images = styled.div`
   border-radius: 5px;
   overflow: hidden;
   width: 100%;
-
+  filter: blur(3px);
   display: flex;
   flex-direction: row;
-
+  flex-wrap: wrap;
   position: relative;
+
+  @media (min-width: 800px) {
+    width: auto;
+  }
 `;
 
 const Rank = styled.div`
@@ -40,8 +44,8 @@ const TheImage = styled.img`
   object-fit: cover;
 
   @media (min-width: 800px) {
-    height: calc((62vw - 40px) / 4);
-    width: calc((62vw - 40px) / 4);
+    height: calc((80vw - 20vw - 100px) / 6);
+    width: calc((80vw - 20vw - 100px) / 6);
   }
 `;
 const BottomLabel = styled.div`
@@ -85,7 +89,7 @@ export default function SessionUserBox({ item }) {
   theImages = theImages.reverse();
 
   theImages.map((item, index) => {
-    if (index < 4) {
+    if (index < 3) {
       images.push(<TheImage src={getImageURL(item)} />);
     }
   });

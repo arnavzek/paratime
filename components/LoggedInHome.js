@@ -9,24 +9,21 @@ import HomeUserBox from "./HomeUserBox";
 import LoadingSection from "./LoadingSection";
 import BarChart from "react-svg-bar-chart";
 import { useState } from "react";
+import { FiSettings } from "react-icons/fi";
+import Header from "./Header";
+import WithHeader from "./WithHeader";
+import LineGraph from "react-line-graph";
+import { AxisOptions, Chart } from "react-charts";
+import { useMemo } from "react";
 
 const Container = styled.div`
+  overflow-y: scroll;
+  height: 100vh;
+
   @media (min-width: 800px) {
-    width: 62vw;
-    border-left: 1px solid #999;
-    border-right: 1px solid #999;
-    overflow-y: scroll;
-    height: 100vh;
   }
 `;
-const Header = styled.div`
-  padding: 20px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0 0 15px 15px;
-  background-color: rgba(255, 255, 255, 0.1);
-`;
+
 const Main = styled.div`
   padding: 20px;
   display: flex;
@@ -36,32 +33,38 @@ const Main = styled.div`
 
   gap: 50px;
 `;
-const Brading = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-`;
 
-const BrandingText = styled.h3`
-  margin: 0;
-`;
-
-const TheBrand = styled(Brand)`
-  height: 25px;
-  width: 25px;
-  margin: 0;
-`;
-const Links = styled.div``;
 const Box = styled.div`
   width: 100%;
 `;
-const BoxTitle = styled.h3``;
+
+const StatBox = styled.div`
+  height: 300px;
+  width: 100%;
+  color: #fff;
+`;
+
+const Padding = styled.div`
+  padding: 25px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  width: 100%;
+`;
+
+const BoxTitle = styled.h3`
+  font-weight: 300;
+`;
 const BoxList = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 20px;
+
+  @media (min-width: 800px) {
+    justify-content: flex-start;
+    gap: 50px;
+  }
 `;
 
 const StartButton = styled.div`
@@ -78,7 +81,7 @@ const StartButton = styled.div`
   gap: 25px;
   padding: 0 20px;
   background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 500px;
+  border-radius: 10px;
   position: relative;
 
   :after {
@@ -87,7 +90,7 @@ const StartButton = styled.div`
     top: 5%;
     left: 3%;
     height: 90%;
-    border-radius: 500px;
+    border-radius: 10px;
     width: 94%;
     background-color: rgba(255, 255, 255, 0.1);
   }
@@ -98,7 +101,7 @@ const StartButton = styled.div`
     top: 10%;
     left: 7.5%;
     height: 80%;
-    border-radius: 500px;
+    border-radius: 10px;
     width: 85%;
     background-color: rgba(255, 255, 255, 0.1);
   }
@@ -112,73 +115,115 @@ const MonthlyRankingItems = styled.div`
   display: flex;
   flex-direction: column;
   gap: 25px;
+
+  @media (min-width: 800px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 `;
 
 export default function LoggedInHome() {
   const [homeData, setHomeData] = useState(null);
   const { loggedInUserID } = useContext(Context);
 
+  const fakeData = useMemo(
+    () => [
+      {
+        label: "Series 1",
+        data: getStatData(),
+      },
+    ],
+    [homeData]
+  );
+
+  const axes = useMemo(
+    () => [
+      { primary: true, type: "linear", position: "bottom" },
+      { type: "linear", position: "left" },
+    ],
+    []
+  );
   useEffect(() => {
     serverLine.get("home").then(setHomeData);
   }, []);
 
   if (!homeData) return <LoadingSection />;
 
-  let graphProp = {
-    data: getStatData(),
+  const data = getStatData();
+
+  const props = {
+    data,
     smoothing: 0.3,
-    accent: "palevioletred",
-    fillBelow: "rgba(200,67,23,0.1)",
+    gridX: true,
+    gridY: true,
+    accent: "steelblue",
+    debug: true,
+    fillBelow: "rgba(255,255,255,0.1)",
+    hover: true,
   };
 
   return (
-    <Container>
-      <Header>
-        <Brading>
-          <TheBrand />
-          <BrandingText>Paratime</BrandingText>
-        </Brading>
-        <Links></Links>
-      </Header>
+    <WithHeader>
+      <Box>
+        <BoxTitle>Start New Session</BoxTitle>
+        <BoxList>
+          <SessionBox name={30} />
+          <SessionBox name={60} />
+          <SessionBox name={120} />
+        </BoxList>
+      </Box>
 
-      <Main>
-        <Link href={"/session"}>
-          <StartButton>Start</StartButton>
-        </Link>
-        <Box>
-          <BoxTitle>Stat</BoxTitle>
-          {/* <LineGraph {...graphProp} /> */}
-          <BarChart data={getStatData()} />
-        </Box>
-        <Box>
-          <BoxTitle>Monthly Ranking</BoxTitle>
-          <MonthlyRankingItems>
-            <HomeUserBox item={getYou()} />
-            {renderUsers()}
-          </MonthlyRankingItems>
-        </Box>
-      </Main>
-    </Container>
+      <Box>
+        <BoxTitle>Stat</BoxTitle>
+        <Padding>
+          <StatBox>
+            <Chart data={fakeData} axes={axes} />
+
+            {/* <LineGraph {...props} /> */}
+            {/* <BarChart data={getStatData()} /> */}
+          </StatBox>
+        </Padding>
+
+        {/* <BarChart data={getStatData()} /> */}
+      </Box>
+
+      <Box>
+        <BoxTitle>Monthly Ranking</BoxTitle>
+        <MonthlyRankingItems>
+          <HomeUserBox item={getYou()} />
+          {renderUsers()}
+        </MonthlyRankingItems>
+      </Box>
+    </WithHeader>
   );
 
   function getStatData() {
     let data = [];
-    let length = 0;
+
+    if (!homeData) return data;
+
+    let today = new Date();
+    let thisMonth = today.getMonth();
 
     for (let key in homeData.me.dailyUsageStat) {
       let item = homeData.me.dailyUsageStat[key];
       for (let key2 in item) {
-        if (length >= 14) return data;
-
         let date = new Date(key2);
-        length++;
+        if (thisMonth !== date.getMonth()) continue;
 
         let item1 = item[key2] / 2;
         let item2 = item1.toFixed(2);
-        data.push({ x: date.getDate(), y: item2 });
+        // data.push({ x: date.getDate(), y: item2 });
+        // data.push({ x: Math.random() * 30, y: Math.random() * 30 });
+        // data.push({ x: Math.random() * 30, y: Math.random() * 30 });
+        // data.push({ x: Math.random() * 30, y: Math.random() * 30 });
+        data.push([date.getDate(), item2]);
+        // data.push([Math.random() * 30, Math.random() * 30]);
         console.log(item1);
       }
     }
+
+    console.log(data, homeData);
 
     return data;
   }
@@ -223,44 +268,53 @@ export default function LoggedInHome() {
   }
 }
 
-// const SessionBoxContainer = styled.div`
-//   width: calc((100vw - 60px) / 2);
-//   display: flex;
-//   flex-direction: column;
-//   gap: 25px;
-//   padding: 15px 20px;
-//   background-color: rgba(255, 255, 255, 0.1);
-//   border-radius: 5px;
-// `;
+const SessionBoxContainer = styled.div`
+  width: auto;
+  /* height: calc(90vw / 3); */
 
-// const SessionIcon = styled.img`
-//   height: 52px;
-//   width: 52px;
-// `;
-// const SessionText = styled.div`
-//   font-size: 18px;
-// `;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  padding: 15px 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  cursor: pointer;
+  @media (min-width: 800px) {
+    flex: unset;
+    width: auto;
+    flex-direction: row;
+    padding: 15px 25px;
+    gap: 20px;
+  }
+`;
 
-// function SessionBox({ name }) {
-//   return (
-//     <Link href={"/session/?type=" + name.toLowerCase()}>
-//       <SessionBoxContainer>
-//         <SessionIcon src={`/session-images/${name.toLowerCase()}.png`} />
-//         <SessionText>{name}</SessionText>
-//       </SessionBoxContainer>
-//     </Link>
-//   );
-// }
+const SessionIcon = styled.img`
+  height: 52px;
+  width: 52px;
 
-/*
-        <Box>
-          <BoxTitle>Select Session Type</BoxTitle>
-          <BoxList>
-            <SessionBox name={"Study"} />
-            <SessionBox name={"Programming"} />
-            <SessionBox name={"Art"} />
-            <SessionBox name={"Exercise"} />
-          </BoxList>
-        </Box>
+  @media (min-width: 800px) {
+    width: 25px;
+    height: 25px;
+  }
+`;
+const SessionText = styled.div`
+  font-size: 18px;
 
-*/
+  @media (min-width: 800px) {
+    font-size: 22px;
+  }
+`;
+
+function SessionBox({ name }) {
+  return (
+    <Link href={"/session/?duration=" + name}>
+      <SessionBoxContainer>
+        {/* <SessionIcon src={`/session-images/${name.toLowerCase()}.png`} /> */}
+        <SessionText>{name} Mins</SessionText>
+      </SessionBoxContainer>
+    </Link>
+  );
+}

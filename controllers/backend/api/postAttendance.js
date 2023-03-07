@@ -1,11 +1,17 @@
 import Profile from "../../../database/models/Profile";
 
+let supportedSessionTags = ["work", "study", "programming", "Art"];
+
 export default async function postSessionAttendance(req, res, next) {
   if (!req.user) return next("Please log in first");
   let theUser = await Profile.findOne({ _id: req.user.id });
 
   if (!theUser) return next("User not found");
   if (!req.body.newImage) return next("Image evidence missing");
+  if (!req.body.sessionTag) return next("sessionTag missing");
+
+  if (!supportedSessionTags.includes(req.body.sessionTag))
+    return next("Invalid Session Tag");
 
   let lastSeenInSessionAt = new Date(theUser.lastSeenInSessionAt);
 
@@ -55,7 +61,6 @@ export default async function postSessionAttendance(req, res, next) {
     let newImageList = [];
 
     if (theUser.sessionImages) {
-      // if (theUser.sessionImages.length > 25) {
       newImageList = [...theUser.sessionImages];
 
       if (theUser.imageToRemove) {
@@ -83,7 +88,7 @@ export default async function postSessionAttendance(req, res, next) {
     let newStat = {};
 
     if (theUser.dailyUsageStat) {
-      newStat = theUser.dailyUsageStat;
+      newStat = JSON.parse(JSON.stringify(theUser.dailyUsageStat));
     }
 
     let sessionTag = "WORK";
@@ -98,9 +103,11 @@ export default async function postSessionAttendance(req, res, next) {
     } else {
       if (newStat[sessionTag][dateString]) {
         newStat[sessionTag][dateString] += 1;
+      } else {
+        newStat[sessionTag][dateString] = 1;
       }
     }
-
+    console.log(dateString, newStat);
     return newStat;
   }
 }
