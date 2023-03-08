@@ -15,6 +15,7 @@ import WithHeader from "./WithHeader";
 import LineGraph from "react-line-graph";
 import { AxisOptions, Chart } from "react-charts";
 import { useMemo } from "react";
+import Stat from "./Stat";
 
 const Container = styled.div`
   overflow-y: scroll;
@@ -36,12 +37,6 @@ const Main = styled.div`
 
 const Box = styled.div`
   width: 100%;
-`;
-
-const StatBox = styled.div`
-  height: 300px;
-  width: 100%;
-  color: #fff;
 `;
 
 const Padding = styled.div`
@@ -175,14 +170,11 @@ export default function LoggedInHome() {
 
       <Box>
         <BoxTitle>Stat</BoxTitle>
-        <Padding>
-          <StatBox>
-            <Chart data={fakeData} axes={axes} />
 
-            {/* <LineGraph {...props} /> */}
-            {/* <BarChart data={getStatData()} /> */}
-          </StatBox>
-        </Padding>
+        {/* <Chart data={fakeData} axes={axes} /> */}
+        {homeData ? <Stat userData={homeData.me} /> : null}
+        {/* <LineGraph {...props} /> */}
+        {/* <BarChart data={getStatData()} /> */}
 
         {/* <BarChart data={getStatData()} /> */}
       </Box>

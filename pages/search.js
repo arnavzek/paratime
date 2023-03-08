@@ -1,12 +1,12 @@
 import Base from "../components/Base";
-import TakeBreak from "../components/TakeBreak";
+import Search from "../components/Search";
 import WithHeader from "../components/WithHeader";
 
 export default function handle() {
   return (
     <Base>
       <WithHeader>
-        <TakeBreak />
+        <Search />
       </WithHeader>
     </Base>
   );

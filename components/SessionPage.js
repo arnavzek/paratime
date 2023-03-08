@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import SessionUserBox from "./SessionUserBox";
+import UserBox from "./UserBox";
 import { FiPlay } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -16,7 +16,7 @@ import Link from "next/link";
 import initImageCapture from "../controllers/initImageCapture";
 import getImageURL from "../controllers/frontend/getImageURL";
 import initScreenshotCapture from "../controllers/initScreenshotCapture";
-import WithHeader from "./WithHeader";
+
 // import ImageCapture from "image-capture";
 
 const Container = styled.div`
@@ -294,61 +294,51 @@ export default function SessionPage() {
 
   if (!loggedInUserID)
     return (
-      <WithHeader>
-        <MessageContainer>
-          <Message>Login Required</Message>
-        </MessageContainer>
-      </WithHeader>
+      <MessageContainer>
+        <Message>Login Required</Message>
+      </MessageContainer>
     );
 
   if (error == "Screenshare Error: Permission denied")
     return (
-      <WithHeader>
-        <MessageContainer>
-          <Message>
-            You denied screenshare permission. Without screenshare the session
-            can't start, this is meant to prevent cheating
-          </Message>
+      <MessageContainer>
+        <Message>
+          You denied screenshare permission. Without screenshare the session
+          can't start, this is meant to prevent cheating
+        </Message>
 
-          <AllowScreenshare onClick={allowScreenshare}>
-            Allow Screenshare
-          </AllowScreenshare>
-        </MessageContainer>
-      </WithHeader>
+        <AllowScreenshare onClick={allowScreenshare}>
+          Allow Screenshare
+        </AllowScreenshare>
+      </MessageContainer>
     );
 
   if (error)
     return (
-      <WithHeader>
-        <MessageContainer>
-          <Message>{error}</Message>
-        </MessageContainer>
-      </WithHeader>
+      <MessageContainer>
+        <Message>{error}</Message>
+      </MessageContainer>
     );
 
   if (!webcamEnabled)
     return (
-      <WithHeader>
-        <MessageContainer>
-          <Message>Webcam Required</Message>
-        </MessageContainer>
-      </WithHeader>
+      <MessageContainer>
+        <Message>Webcam Required</Message>
+      </MessageContainer>
     );
 
   if (!screenshareEnabled)
     return (
-      <WithHeader>
-        <MessageContainer>
-          <Message>
-            Please allow Screenshare so that there is evidence of your work.
-            Don't worry about privacy we will blur the screenshare
-          </Message>
+      <MessageContainer>
+        <Message>
+          Please allow Screenshare so that there is evidence of your work. Don't
+          worry about privacy we will blur the screenshare
+        </Message>
 
-          <AllowScreenshare onClick={allowScreenshare}>
-            Allow Screenshare
-          </AllowScreenshare>
-        </MessageContainer>
-      </WithHeader>
+        <AllowScreenshare onClick={allowScreenshare}>
+          Allow Screenshare
+        </AllowScreenshare>
+      </MessageContainer>
     );
 
   if (!sessionData) return <LoadingSection />;
@@ -370,40 +360,37 @@ export default function SessionPage() {
   //   );
 
   return (
-    <WithHeader>
-      <Container>
-        <BottomButtons>
-          <Buttons>
-            <Link href="/">
-              <Header>
-                <MdOutlineArrowBackIosNew />
-                <Title>Back</Title>
-              </Header>
-            </Link>
-            {getTimerButtons()}
-            <PomodoroButton
-              sessionStatus={sessionStatus}
-              onClick={updatePodoro}
-              value={pomodoroTimer}
-            />
-          </Buttons>
-          <Timer>
-            <Time>{minAndSecs.mins}</Time>
-            <Time>{minAndSecs.secs}</Time>
-          </Timer>
-        </BottomButtons>
+    <Container>
+      <BottomButtons>
+        <Buttons>
+          <Link href="/">
+            <Header>
+              <MdOutlineArrowBackIosNew />
+              <Title>Back</Title>
+            </Header>
+          </Link>
+          {getTimerButtons()}
+          <PomodoroButton
+            sessionStatus={sessionStatus}
+            onClick={updatePodoro}
+            value={pomodoroTimer}
+          />
+        </Buttons>
+        <Timer>
+          <Time>{minAndSecs.mins}</Time>
+          <Time>{minAndSecs.secs}</Time>
+        </Timer>
+      </BottomButtons>
 
-        <RankingSection>
-          <SectionHeading>Ranking</SectionHeading>
+      <RankingSection>
+        <SectionHeading>Ranking</SectionHeading>
 
-          <Main>
-            <SessionUserBox item={getYou()} />
-
-            {renderUsers()}
-          </Main>
-        </RankingSection>
-      </Container>
-    </WithHeader>
+        <Main>
+          <UserBox item={getYou()} />
+          {renderUsers()}
+        </Main>
+      </RankingSection>
+    </Container>
   );
 
   function allowScreenshare() {
@@ -618,7 +605,7 @@ export default function SessionPage() {
 
     sessionData.allOnlineUsers.map((item, index) => {
       if (item._id !== loggedInUserID)
-        users.push(<SessionUserBox item={{ ...item, rank: index + 1 }} />);
+        users.push(<UserBox item={{ ...item, rank: index + 1 }} />);
     });
 
     return users;

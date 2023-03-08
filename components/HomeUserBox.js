@@ -42,7 +42,7 @@ const TheImage = styled.img`
   object-fit: cover;
 `;
 const BottomLabel = styled.div`
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(2px);
 
   padding: 10px;
   flex: 1;

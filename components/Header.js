@@ -10,6 +10,8 @@ import LoadingSection from "./LoadingSection";
 import BarChart from "react-svg-bar-chart";
 import { useState } from "react";
 import { FiSettings } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
+import { AiOutlineUser } from "react-icons/ai";
 
 const Container = styled.div`
   padding: 20px 20px;
@@ -42,13 +44,21 @@ const TheBrand = styled(Brand)`
   width: 25px;
   margin: 0;
 `;
-const Links = styled.div``;
+const Links = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+`;
 
 const LinkItem = styled.div`
   cursor: pointer;
 `;
 
 export default function Header() {
+  const { loggedInUser } = useContext(Context);
+
+  if (!loggedInUser) return null;
+
   return (
     <Container>
       <Link href="/">
@@ -58,6 +68,18 @@ export default function Header() {
         </Brading>
       </Link>
       <Links>
+        <Link href="/search">
+          <LinkItem>
+            <FiSearch />
+          </LinkItem>
+        </Link>
+
+        <Link href={"/profile/" + loggedInUser.username}>
+          <LinkItem>
+            <AiOutlineUser />
+          </LinkItem>
+        </Link>
+
         <Link href="/settings">
           <LinkItem>
             <FiSettings />

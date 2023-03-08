@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useContext } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
+import Base from "./Base";
 import Header from "./Header";
 
 const Container = styled.div`

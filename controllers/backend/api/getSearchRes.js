@@ -6,8 +6,9 @@ export default async function getSearchRes(req, res, next) {
   let notifs = [];
 
   if (req.query.query) {
-    let config = [{ $search: req.query.query }, { $limit: 20 }];
-    result = await Profile.aggregate(config);
+    notifs = await Profile.find({ $text: { $search: req.query.query } }).limit(
+      20
+    );
   } else if (req.query.tag) {
     notifs = await Profile.find({ tags: req.query.tag });
   } else {

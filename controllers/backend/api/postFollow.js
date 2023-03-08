@@ -4,10 +4,9 @@ export default async function postFollow(req, res, next) {
   if (!req.user) return next("User not found");
 
   if (!req.body.receiverUserID) return next("receiverUserID not found");
-  if (!req.body.senderUserID) return next("senderReceiverID not found");
 
   let receiverUserID = req.body.receiverUserID;
-  let senderUserID = req.body.senderUserID;
+  let senderUserID = req.user.id;
 
   let finalStatus = true;
 

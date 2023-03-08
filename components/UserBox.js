@@ -1,13 +1,12 @@
 import styled from "styled-components";
 import getImageURL from "../controllers/frontend/getImageURL";
+import Link from "next/link";
 
 const Container = styled.div`
   width: calc(100vw - 40px);
   height: auto;
   border-radius: 5px;
   overflow: hidden;
-  /* width: 100%; */
-  /* flex: 1; */
   background-color: rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
@@ -23,7 +22,7 @@ const Images = styled.div`
   border-radius: 5px;
   overflow: hidden;
   width: 100%;
-  filter: blur(3px);
+  filter: blur(1px);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -44,8 +43,8 @@ const TheImage = styled.img`
   object-fit: cover;
 
   @media (min-width: 800px) {
-    height: calc((80vw - 20vw - 100px) / 6);
-    width: calc((80vw - 20vw - 100px) / 6);
+    height: calc((80vw - 20vw - 30px) / 3);
+    width: calc((80vw - 20vw - 30px) / 3);
   }
 `;
 const BottomLabel = styled.div`
@@ -82,31 +81,35 @@ const Status = styled.div`
   font-size: 10px;
 `;
 
-export default function SessionUserBox({ item }) {
+export default function UserBox({ item }) {
   let images = [];
 
   let theImages = [...item.sessionImages];
   theImages = theImages.reverse();
 
-  theImages.map((item, index) => {
+  theImages.map((imageItem, index) => {
     if (index < 3) {
-      images.push(<TheImage src={getImageURL(item)} />);
+      images.push(<TheImage src={getImageURL(imageItem)} />);
     }
   });
 
   return (
-    <Container>
-      <Images>{images}</Images>
-      <BottomLabel>
-        <First>
-          <Name>{item.name}</Name>
-        </First>
-        <SecondLine>
-          <Duration>Today: {Math.floor(item.todaysDuration / 2)} Mins</Duration>
-          <Rank>Rank {item.rank}</Rank>
-        </SecondLine>
-        <Status>{item.status}</Status>
-      </BottomLabel>
-    </Container>
+    <Link href={"/profile/" + item.username}>
+      <Container>
+        <Images>{images}</Images>
+        <BottomLabel>
+          <First>
+            <Name>{item.name}</Name>
+          </First>
+          <SecondLine>
+            <Duration>
+              Today: {Math.floor(item.todaysDuration / 2)} Mins
+            </Duration>
+            <Rank>Rank {item.rank}</Rank>
+          </SecondLine>
+          <Status>{item.status}</Status>
+        </BottomLabel>
+      </Container>
+    </Link>
   );
 }

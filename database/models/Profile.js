@@ -21,7 +21,7 @@ let profile = new mongoose.Schema(
     todaysDuration: { type: Number },
     monthsDuration: { type: Number },
     bio: { type: String },
-    tags: [{ type: String }],
+    tag: { type: String },
     storageUsage: { type: Number },
     name: { type: String },
     email: { type: String },
@@ -30,7 +30,11 @@ let profile = new mongoose.Schema(
   { timestamps: true }
 );
 
+profile.index({ name: "text", username: "text", username: "bio", tag: "bio" });
 profile.index({ email: 1 });
+profile.index({ username: 1 });
+profile.index({ tag: 1, todaysDuration: 1 });
+profile.index({ tag: 1, monthsDuration: 1 });
 profile.index({ todaysDuration: 1 });
 profile.index({ monthsDuration: 1 });
 
