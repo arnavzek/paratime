@@ -112,7 +112,7 @@ export default function RankingSection({ following, worldWide, me }) {
 
   function renderTags() {
     return tags.map((item) => (
-      <Tag highlight={selectedTag == item} onClick={selectTag(item)}>
+      <Tag key={item} highlight={selectedTag == item} onClick={selectTag(item)}>
         {item}
       </Tag>
     ));
@@ -137,7 +137,9 @@ export default function RankingSection({ following, worldWide, me }) {
 
     list.map((item, index) => {
       if (item._id !== loggedInUserID)
-        users.push(<UserBox item={{ ...item, rank: index + 1 }} />);
+        users.push(
+          <UserBox key={item._id} item={{ ...item, rank: index + 1 }} />
+        );
     });
 
     return users;

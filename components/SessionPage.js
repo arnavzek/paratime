@@ -341,8 +341,8 @@ export default function SessionPage() {
     return (
       <MessageContainer>
         <Message>
-          You denied screenshare permission. Without screenshare the session
-          can't start, this is meant to prevent cheating
+          {`You denied screenshare permission. Without screenshare the session
+          can't start, this is meant to prevent cheating`}
         </Message>
 
         <AllowScreenshare onClick={allowScreenshare}>
@@ -369,8 +369,9 @@ export default function SessionPage() {
     return (
       <MessageContainer>
         <Message>
-          Please allow Screenshare so that there is evidence of your work. Don't
-          worry about privacy we will blur the screenshare
+          {
+            "Please allow Screenshare so that there is evidence of your work. Don't worry about privacy we will blur the screenshare"
+          }
         </Message>
 
         <AllowScreenshare onClick={allowScreenshare}>
@@ -439,14 +440,6 @@ export default function SessionPage() {
     if (window.featchInterval) window.clearInterval(window.featchInterval);
   }
 
-  function renderTags() {
-    return tags.map((item) => (
-      <Tag highlight={sessionTag == item} onClick={selectTag(item)}>
-        {item}
-      </Tag>
-    ));
-  }
-
   function selectTag(item) {
     return () => {
       setSessionTag(item);
@@ -474,28 +467,6 @@ export default function SessionPage() {
       console.log(err);
       setError("Screenshare Error: " + err.message);
     }
-  }
-
-  function getYou() {
-    if (!sessionData) return null;
-
-    return {
-      ...sessionData.me,
-      rank: getYouRank(),
-      name: "You",
-    };
-  }
-
-  function getYouRank() {
-    let rank = "NA";
-
-    sessionData.allOnlineUsers.map((item, index) => {
-      if (item._id == loggedInUserID) rank = index;
-    });
-
-    if (rank !== "NA") rank += 1;
-
-    return rank;
   }
 
   function handleVideoPermission() {
@@ -664,21 +635,6 @@ export default function SessionPage() {
   function resetSession() {
     setSessionStatus("OFF");
     setTimer(0);
-  }
-
-  function renderUsers() {
-    let users = [];
-
-    if (!sessionData) return users;
-
-    if (!sessionData.allOnlineUsers) return users;
-
-    sessionData.allOnlineUsers.map((item, index) => {
-      if (item._id !== loggedInUserID)
-        users.push(<UserBox item={{ ...item, rank: index + 1 }} />);
-    });
-
-    return users;
   }
 
   function getTimerButtons() {

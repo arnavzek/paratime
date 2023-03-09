@@ -70,8 +70,12 @@ export default function UserPage({ user, followStatus }) {
         <SmallDetails>
           <Detail>@{user.username}</Detail>
           <Detail>#{user.tag ? user.tag : "Work"}</Detail>
-          <Detail>Today's Duration {user.todaysDuration}</Detail>
-          <Detail> Month's Duration {user.monthsDuration}</Detail>
+          <Detail>
+            {"Today's Duration"} {user.todaysDuration}
+          </Detail>
+          <Detail>
+            {"Month's Duration"} {user.monthsDuration}
+          </Detail>
         </SmallDetails>
         <FollowButton initialStatus={followStatus} receiverUserID={user._id} />
       </Details>
@@ -90,7 +94,7 @@ export default function UserPage({ user, followStatus }) {
 
     theImages = theImages.slice(0, 50);
     return theImages.map((imageItem) => {
-      return <Photo src={getImageURL(imageItem)} />;
+      return <Photo key={imageItem} src={getImageURL(imageItem)} />;
     });
   }
 }

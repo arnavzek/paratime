@@ -1,4 +1,4 @@
-import Notification from "../../../database/models/Notifications";
+import Notification from "../../../database/models/Notification";
 
 export default async function postFollow(req, res, next) {
   if (!req.user) return next("User not found");
