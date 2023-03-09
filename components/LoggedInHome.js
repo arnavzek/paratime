@@ -16,6 +16,7 @@ import LineGraph from "react-line-graph";
 import { AxisOptions, Chart } from "react-charts";
 import { useMemo } from "react";
 import Stat from "./Stat";
+import RankingSection from "./RankingSection";
 
 const Container = styled.div`
   overflow-y: scroll;
@@ -180,11 +181,11 @@ export default function LoggedInHome() {
       </Box>
 
       <Box>
-        <BoxTitle>Monthly Ranking</BoxTitle>
-        <MonthlyRankingItems>
-          <HomeUserBox item={getYou()} />
-          {renderUsers()}
-        </MonthlyRankingItems>
+        <RankingSection
+          following={homeData.followingUsers}
+          worldWide={homeData.worldWideUsers}
+          me={homeData.me}
+        />
       </Box>
     </WithHeader>
   );

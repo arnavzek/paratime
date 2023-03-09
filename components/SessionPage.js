@@ -16,14 +16,16 @@ import Link from "next/link";
 import initImageCapture from "../controllers/initImageCapture";
 import getImageURL from "../controllers/frontend/getImageURL";
 import initScreenshotCapture from "../controllers/initScreenshotCapture";
+import RankingSection from "./RankingSection";
 
 // import ImageCapture from "image-capture";
 
 const Container = styled.div`
   @media (min-width: 800px) {
-    width: 80vw;
+    width: calc(80vw);
     flex-direction: row;
     display: flex;
+
     justify-content: space-between;
   }
 `;
@@ -191,16 +193,19 @@ const MessageContainer = styled.div`
   align-items: center;
 `;
 
-const RankingSection = styled.div`
-  @media (min-width: 800px) {
-    width: auto;
-    padding-left: 50px;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-`;
+// const RankingSection = styled.div`
+//   margin-top: 50px;
+
+//   @media (min-width: 800px) {
+//     margin: 0;
+//     width: auto;
+//     padding-left: 50px;
+//     display: flex;
+//     flex: 1;
+//     flex-direction: column;
+//     align-items: flex-start;
+//   }
+// `;
 
 const AllowScreenshare = styled.button`
   background: transparent;
@@ -211,6 +216,37 @@ const AllowScreenshare = styled.button`
   border: 1px solid #999;
   border-radius: 50px;
 `;
+
+const Tags = styled.div`
+  display: grid;
+  gap: 2px;
+  background-color: #222;
+  border-radius: 5px;
+  overflow: hidden;
+  grid-template-columns: 1fr 1fr;
+`;
+
+const Tag = styled.div`
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  text-transform: capitalize;
+  height: 35px;
+  border-radius: 0;
+  ${({ highlight }) => {
+    if (highlight)
+      return `
+      background-color:#fff;
+      color:#111;
+    `;
+  }}
+`;
+
+let tags = ["studying", "work", "programming", "art"];
 
 export default function SessionPage() {
   const [sessionStatus, setSessionStatus] = useState("OFF");
@@ -232,6 +268,10 @@ export default function SessionPage() {
   }
 
   useEffect(handleVideoPermission, []);
+
+  useEffect(() => {
+    return handleUnmount;
+  }, []);
 
   useEffect(() => {
     if (router.isReady) {
@@ -279,8 +319,6 @@ export default function SessionPage() {
     window.timerController = setInterval(() => {
       if (window.sessionStatus == "ON") {
         setTimer(window.timer - 1);
-
-        let mins = window.timer / 60;
 
         if (window.timer <= 0) {
           pauseSession();
@@ -343,22 +381,6 @@ export default function SessionPage() {
 
   if (!sessionData) return <LoadingSection />;
 
-  // if (screenshareEnabled)
-  //   return (
-  //     <>
-  //       <video
-  //         src={window.screenshareStream}
-  //         id="gum-local"
-  //         autoplay
-  //         playsinline
-  //         muted
-  //       ></video>
-  //       <button onClick={takeScreenshot}>Take screenshot</button>
-
-  //       <img src={webcamImage} />
-  //     </>
-  //   );
-
   return (
     <Container>
       <BottomButtons>
@@ -370,11 +392,13 @@ export default function SessionPage() {
             </Header>
           </Link>
           {getTimerButtons()}
-          <PomodoroButton
+          {/* <PomodoroButton
             sessionStatus={sessionStatus}
             onClick={updatePodoro}
             value={pomodoroTimer}
-          />
+          /> */}
+
+          {/* <Tags>{renderTags()}</Tags> */}
         </Buttons>
         <Timer>
           <Time>{minAndSecs.mins}</Time>
@@ -382,16 +406,53 @@ export default function SessionPage() {
         </Timer>
       </BottomButtons>
 
-      <RankingSection>
-        <SectionHeading>Ranking</SectionHeading>
+      {sessionData ? (
+        <RankingSection
+          following={sessionData.followingUsers}
+          worldWide={sessionData.worldWideUsers}
+          me={sessionData.me}
+        />
+      ) : null}
 
+      {/* <RankingSection>
+        <SectionHeading>Ranking</SectionHeading>
         <Main>
           <UserBox item={getYou()} />
           {renderUsers()}
         </Main>
-      </RankingSection>
+      </RankingSection> */}
     </Container>
   );
+
+  function handleUnmount() {
+    console.log("un onmounting");
+    if (window.screenshareStream) {
+      var tracks = screenshareStream.getVideoTracks();
+      for (var i = 0; i < tracks.length; i++) tracks[i].stop();
+    }
+
+    if (window.theMediaSteam) {
+      var tracks = theMediaSteam.getVideoTracks();
+      for (var i = 0; i < tracks.length; i++) tracks[i].stop();
+    }
+
+    if (window.featchInterval) window.clearInterval(window.featchInterval);
+  }
+
+  function renderTags() {
+    return tags.map((item) => (
+      <Tag highlight={sessionTag == item} onClick={selectTag(item)}>
+        {item}
+      </Tag>
+    ));
+  }
+
+  function selectTag(item) {
+    return () => {
+      setSessionTag(item);
+      serverLine.patch("profile", { tag: item });
+    };
+  }
 
   function allowScreenshare() {
     initScreenshotCapture(onSuccess, onError, onEnd);
@@ -587,6 +648,15 @@ export default function SessionPage() {
     setSessionStatus("ON");
   }
 
+  function startSessionInit() {
+    if (!router.isReady) return;
+
+    setSessionStatus("ON");
+    const { duration } = router.query;
+
+    setTimer(parseInt(duration) * 60);
+  }
+
   function pauseSession() {
     setSessionStatus("OFF");
   }
@@ -632,7 +702,7 @@ export default function SessionPage() {
 
     if (sessionStatus == "OFF")
       return (
-        <StartButton onClick={startSession}>
+        <StartButton onClick={startSessionInit}>
           <ButtonIcon>
             <FiPlay />
           </ButtonIcon>

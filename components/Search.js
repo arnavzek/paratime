@@ -48,30 +48,23 @@ export default function Search() {
   const [searchRes, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(null);
 
-  if (loading)
-    return (
-      <WithHeader>
-        <LoadingSection />
-      </WithHeader>
-    );
+  if (loading) return <LoadingSection />;
 
   return (
-    <WithHeader>
-      <Container>
-        <SearchBoxContainer>
-          <SearchInput
-            placeholder="Search Users"
-            onKeyUp={detectEnter}
-            onChange={updateQuery}
-            value={searchQuery}
-          />
-          <SearchButton onClick={doSearch}>
-            <FiSearch />
-          </SearchButton>
-        </SearchBoxContainer>
-        <SearchResult>{renderResult()}</SearchResult>
-      </Container>
-    </WithHeader>
+    <Container>
+      <SearchBoxContainer>
+        <SearchInput
+          placeholder="Search Users"
+          onKeyUp={detectEnter}
+          onChange={updateQuery}
+          value={searchQuery}
+        />
+        <SearchButton onClick={doSearch}>
+          <FiSearch />
+        </SearchButton>
+      </SearchBoxContainer>
+      <SearchResult>{renderResult()}</SearchResult>
+    </Container>
   );
 
   function renderResult() {

@@ -24,17 +24,26 @@ const Details = styled.div`
   align-items: center;
   text-align: center;
 `;
+
 const Name = styled.h1`
   margin: 0;
   padding: 0;
 `;
 const SmallDetails = styled.div`
   display: flex;
-  flex-direction: row;
+
   gap: 25px;
+
+  flex-direction: column;
+
+  @media (min-width: 800px) {
+    flex-direction: row;
+  }
 `;
 const Detail = styled.div``;
-const StatSection = styled.div``;
+const StatSection = styled.div`
+  width: 100%;
+`;
 const Photos = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -45,9 +54,11 @@ const Photos = styled.div`
 `;
 const Photo = styled.img`
   object-fit: cover;
-  width: calc((100vw) / 3);
+  width: calc((100vw - 50px) / 2);
+  height: calc((100vw - 50px) / 2);
   @media (min-width: 800px) {
     width: calc((80vw - 40px) / 3);
+    height: calc((80vw - 40px) / 3);
   }
 `;
 
@@ -58,7 +69,7 @@ export default function UserPage({ user, followStatus }) {
         <Name>{user.name}</Name>
         <SmallDetails>
           <Detail>@{user.username}</Detail>
-          <Detail>{user.tag}</Detail>
+          <Detail>#{user.tag ? user.tag : "Work"}</Detail>
           <Detail>Today's Duration {user.todaysDuration}</Detail>
           <Detail> Month's Duration {user.monthsDuration}</Detail>
         </SmallDetails>
