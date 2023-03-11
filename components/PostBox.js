@@ -95,10 +95,10 @@ const Small = styled.div`
   /* font-size: 10px; */
 `;
 
-export default function UserBox({ item }) {
+export default function PostBox({ item }) {
   let images = [];
 
-  let theImages = [...item.sessionImages];
+  let theImages = [...item.images];
   theImages = theImages.reverse();
 
   theImages.map((imageItem, index) => {
@@ -107,20 +107,23 @@ export default function UserBox({ item }) {
     }
   });
 
+  let author = item.author;
+
   return (
-    <Link href={"/profile/" + item.username}>
+    <Link href={"/profile/" + author.username}>
       <Container>
         <Images>{images}</Images>
         <BottomLabel>
           <First>
-            <Name>{item.name}</Name>
+            <Name>{author.name}</Name>
           </First>
           <SecondLine>
-            <Small>Today: {toMinsOrHours(item.todaysDuration)}</Small>
-            <Small>This Month: {toMinsOrHours(item.monthsDuration)} </Small>
-            <Small>Rank {item.rank}</Small>
-            <Small>{item.status}</Small>
+            <Small>Today: {toMinsOrHours(author.todaysDuration)}</Small>
+            <Small>This Month: {toMinsOrHours(author.monthsDuration)} </Small>
           </SecondLine>
+        </BottomLabel>
+        <BottomLabel>
+          <First>{item.title}</First>
         </BottomLabel>
       </Container>
     </Link>

@@ -14,6 +14,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 10px;
   position: relative;
+  padding: 10px;
 
   @media (min-width: 800px) {
     width: auto;
@@ -70,10 +71,11 @@ const BottomLabel = styled.div`
   gap: 5px;
 `;
 
-const First = styled.h3`
+const First = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 5px;
+  gap: 15px;
+  align-items: center;
   margin: 0;
   /* font-size: 15px; */
 `;
@@ -89,39 +91,27 @@ const SecondLine = styled.span`
     width: auto;
   }
 `;
-const Name = styled.div``;
+const Name = styled.h3`
+  padding: 0;
+  margin: 0;
+`;
 const Duration = styled.div``;
 const Small = styled.div`
   /* font-size: 10px; */
 `;
 
-export default function UserBox({ item }) {
-  let images = [];
-
-  let theImages = [...item.sessionImages];
-  theImages = theImages.reverse();
-
-  theImages.map((imageItem, index) => {
-    if (index < 4) {
-      images.push(<TheImage src={getImageURL(imageItem)} />);
-    }
-  });
-
+export default function UserBoxSmall({ item }) {
   return (
     <Link href={"/profile/" + item.username}>
       <Container>
-        <Images>{images}</Images>
-        <BottomLabel>
-          <First>
-            <Name>{item.name}</Name>
-          </First>
-          <SecondLine>
-            <Small>Today: {toMinsOrHours(item.todaysDuration)}</Small>
-            <Small>This Month: {toMinsOrHours(item.monthsDuration)} </Small>
-            <Small>Rank {item.rank}</Small>
-            <Small>{item.status}</Small>
-          </SecondLine>
-        </BottomLabel>
+        <First>
+          <Name>{item.name}</Name>
+          <Small>Rank {item.rank}</Small>
+        </First>
+        <SecondLine>
+          <Small>Today: {toMinsOrHours(item.todaysDuration)}</Small>
+          <Small>This Month: {toMinsOrHours(item.monthsDuration)} </Small>
+        </SecondLine>
       </Container>
     </Link>
   );

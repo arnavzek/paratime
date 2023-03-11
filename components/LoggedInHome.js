@@ -5,7 +5,6 @@ import styled from "styled-components";
 import Context from "../Context";
 import { serverLine } from "../controllers/frontend/serverLine";
 import Brand from "./Brand";
-import HomeUserBox from "./HomeUserBox";
 import LoadingSection from "./LoadingSection";
 import BarChart from "react-svg-bar-chart";
 import { useState } from "react";
@@ -17,6 +16,7 @@ import { AxisOptions, Chart } from "react-charts";
 import { useMemo } from "react";
 import Stat from "./Stat";
 import RankingSection from "./RankingSection";
+import PostsSection from "./PostsSection";
 
 const Container = styled.div`
   overflow-y: scroll;
@@ -165,7 +165,7 @@ export default function LoggedInHome() {
         <BoxList>
           <SessionBox name={30} />
           <SessionBox name={60} />
-          <SessionBox name={120} />
+          {/* <SessionBox name={120} /> */}
         </BoxList>
       </Box>
 
@@ -181,11 +181,7 @@ export default function LoggedInHome() {
       </Box>
 
       <Box>
-        <RankingSection
-          following={homeData.followingUsers}
-          worldWide={homeData.worldWideUsers}
-          me={homeData.me}
-        />
+        <PostsSection posts={homeData.posts} />
       </Box>
     </WithHeader>
   );
@@ -219,45 +215,6 @@ export default function LoggedInHome() {
     console.log(data, homeData);
 
     return data;
-  }
-
-  function renderUsers() {
-    let users = [];
-
-    if (!homeData) return users;
-
-    if (!homeData.monthlyRanking) return users;
-
-    homeData.monthlyRanking.map((item, index) => {
-      if (index < 10) {
-        if (item._id !== loggedInUserID)
-          users.push(<HomeUserBox item={{ ...item, rank: index + 1 }} />);
-      }
-    });
-
-    return users;
-  }
-
-  function getYou() {
-    if (!homeData) return null;
-
-    return {
-      ...homeData.me,
-      rank: getYouRank(),
-      name: "You",
-    };
-  }
-
-  function getYouRank() {
-    let rank = "NA";
-
-    homeData.monthlyRanking.map((item, index) => {
-      if (item._id == loggedInUserID) rank = index;
-    });
-
-    if (rank !== "NA") rank += 1;
-
-    return rank;
   }
 }
 

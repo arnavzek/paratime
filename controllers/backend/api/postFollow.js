@@ -9,7 +9,7 @@ export default async function postFollow(req, res, next) {
   let senderUserID = req.user.id;
 
   let finalStatus = true;
-
+  let type = "FOLLOW";
   let existingNotif = await Notification.findOne({
     senderUserID,
     receiverUserID,
@@ -36,6 +36,7 @@ export default async function postFollow(req, res, next) {
     let newNotif = new Notification();
     newNotif.senderUserID = senderUserID;
     newNotif.receiverUserID = receiverUserID;
+    newNotif.type = "FOLLOW";
     newNotif.status = true;
     await newNotif.save();
   }

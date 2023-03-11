@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Context from "../Context";
 import { serverLine } from "../controllers/frontend/serverLine";
 import Brand from "./Brand";
-import HomeUserBox from "./HomeUserBox";
+
 import LoadingSection from "./LoadingSection";
 import BarChart from "react-svg-bar-chart";
 import { useState } from "react";

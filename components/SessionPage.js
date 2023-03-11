@@ -17,6 +17,10 @@ import initImageCapture from "../controllers/initImageCapture";
 import getImageURL from "../controllers/frontend/getImageURL";
 import initScreenshotCapture from "../controllers/initScreenshotCapture";
 import RankingSection from "./RankingSection";
+import PostsSection from "./PostsSection";
+import ContentCreator from "./ContentCreator";
+import CapturedImages from "./CapturedImages";
+import RankingSectionSmall from "./RankingSectionSmall";
 
 // import ImageCapture from "image-capture";
 
@@ -25,7 +29,7 @@ const Container = styled.div`
     width: calc(80vw);
     flex-direction: row;
     display: flex;
-
+    gap: 50px;
     justify-content: space-between;
   }
 `;
@@ -36,6 +40,11 @@ const Header = styled.div`
   flex-direction: row;
   display: flex;
   align-items: center;
+  display: none;
+
+  @media (min-width: 800px) {
+    display: flex;
+  }
 `;
 const Title = styled.div`
   margin: 0;
@@ -50,18 +59,24 @@ const SubTitle = styled.span`
   padding: 0;
 `;
 const Main = styled.div`
-  padding: 0;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex: 1;
+  flex-direction: column;
+  gap: 50px;
+
+  @media (max-width: 800px) {
+    margin-top: 50px;
+  }
+
+  @media (min-width: 800px) {
+    height: calc(100vh - 120px);
+    overflow-y: scroll;
+  }
 `;
 const BottomButtons = styled.div`
   padding: 15px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column-reverse;
   backdrop-filter: blur(50px);
   border-radius: 5px;
   gap: 20px;
@@ -86,12 +101,12 @@ const LastImage = styled.img`
 
 const Timer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   font-size: 52px;
   justify-content: space-between;
-  height: 190px;
 
   @media (min-width: 800px) {
+    flex-direction: column;
     gap: calc(18vw / 3);
     height: auto;
     padding-bottom: 50px;
@@ -109,16 +124,20 @@ const Time = styled.h1`
 
 const Buttons = styled.div`
   display: flex;
-  height: 190px;
   justify-content: space-between;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 25px;
+
+  @media (min-width: 800px) {
+    flex-direction: column;
+  }
 `;
 const Button = styled.button`
   display: flex;
   flex-direction: row;
   cursor: pointer;
   color: #fff;
-  width: calc(45vw - 15px);
+  width: auto;
   padding: 0 15px;
   border-radius: 5px;
   overflow: hidden;
@@ -159,7 +178,8 @@ const PauseButton = styled(Button)`
 
 const EvenButton = styled(Button)`
   /* width: 50px; */
-  padding: 0;
+  padding: 10px 10px;
+  flex: 1;
   gap: 15px;
   justify-content: center;
   align-items: center;
@@ -254,17 +274,16 @@ export default function SessionPage() {
   const [sessionData, setSessionData] = useState(null);
   const { loggedInUserID } = useContext(Context);
   const [error, setError] = useState(false);
-  const [sessionTag, setSessionTag] = useState("work");
-  const [pomodoroTimer, setPodoroTimer] = useState(30);
   const [timer, setTimer] = useState(60 * 60);
   const [screenshareEnabled, setScreenshareStatus] = useState(false);
+
   const router = useRouter();
 
   if (typeof window !== "undefined") {
     window.sessionStatus = sessionStatus;
     window.webcamEnabled = webcamEnabled;
     window.timer = timer;
-    window.pomodoroTimer = pomodoroTimer;
+    window.screenshareEnabled = screenshareEnabled;
   }
 
   useEffect(handleVideoPermission, []);
@@ -277,7 +296,9 @@ export default function SessionPage() {
     if (router.isReady) {
       const { duration } = router.query;
 
-      if (webcamEnabled && screenshareEnabled) {
+      let innerWidth = window.innerWidth;
+
+      if (webcamEnabled && (screenshareEnabled || innerWidth > 800)) {
         setSessionStatus("ON");
         setTimer(parseInt(duration) * 60);
       }
@@ -296,19 +317,18 @@ export default function SessionPage() {
       .catch(console.log);
 
     function doIt() {
-      fetchSessionData().then((data) => {
-        setSessionData(data);
-        postAttendance(data);
-      });
+      fetchSessionData().then(setSessionData);
+      postAttendance();
     }
 
     doIt();
 
     window.featchInterval = setInterval(() => {
+      console.log("THE INVE", window.sessionStatus);
       if (window.sessionStatus == "ON") {
         doIt();
       }
-    }, 30000);
+    }, 5000);
   }, [sessionStatus]);
 
   useEffect(() => {
@@ -321,8 +341,10 @@ export default function SessionPage() {
         setTimer(window.timer - 1);
 
         if (window.timer <= 0) {
-          pauseSession();
-          router.push("/break");
+          // pauseSession();
+          setSessionStatus("ENDED");
+
+          // router.push("/break");
         }
       }
     }, 1000);
@@ -342,7 +364,7 @@ export default function SessionPage() {
       <MessageContainer>
         <Message>
           {`You denied screenshare permission. Without screenshare the session
-          can't start, this is meant to prevent cheating`}
+          can't start, this is meant to prevent cheating. Don't worry screenshot will only be posted after your approval`}
         </Message>
 
         <AllowScreenshare onClick={allowScreenshare}>
@@ -370,7 +392,7 @@ export default function SessionPage() {
       <MessageContainer>
         <Message>
           {
-            "Please allow Screenshare so that there is evidence of your work. Don't worry about privacy we will blur the screenshare"
+            "Please allow Screenshare so that there is evidence of your work. Don't worry about privacy, it will only be posted after your approval"
           }
         </Message>
 
@@ -381,6 +403,9 @@ export default function SessionPage() {
     );
 
   if (!sessionData) return <LoadingSection />;
+
+  // if (sessionData == "ENDED")
+  //   return <ContentCreator duration={getDuration()} imageBlobs={imagesBlobs} />;
 
   return (
     <Container>
@@ -393,13 +418,6 @@ export default function SessionPage() {
             </Header>
           </Link>
           {getTimerButtons()}
-          {/* <PomodoroButton
-            sessionStatus={sessionStatus}
-            onClick={updatePodoro}
-            value={pomodoroTimer}
-          /> */}
-
-          {/* <Tags>{renderTags()}</Tags> */}
         </Buttons>
         <Timer>
           <Time>{minAndSecs.mins}</Time>
@@ -407,23 +425,27 @@ export default function SessionPage() {
         </Timer>
       </BottomButtons>
 
-      {sessionData ? (
-        <RankingSection
-          following={sessionData.followingUsers}
-          worldWide={sessionData.worldWideUsers}
+      <Main>
+        <RankingSectionSmall
           me={sessionData.me}
+          followingUsers={sessionData.followingUsers}
         />
-      ) : null}
-
-      {/* <RankingSection>
-        <SectionHeading>Ranking</SectionHeading>
-        <Main>
-          <UserBox item={getYou()} />
-          {renderUsers()}
-        </Main>
-      </RankingSection> */}
+        <CapturedImages imageBlobs={getImageBlobs()} />
+      </Main>
     </Container>
   );
+
+  function getImageBlobs() {
+    if (typeof window == "undefined") return [];
+    if (!window.imageBlobList) return [];
+    return window.imageBlobList;
+  }
+
+  function getDuration() {
+    const { duration } = router.query;
+    let total = parseInt(duration) * 60;
+    return timer - total;
+  }
 
   function handleUnmount() {
     console.log("un onmounting");
@@ -440,22 +462,17 @@ export default function SessionPage() {
     if (window.featchInterval) window.clearInterval(window.featchInterval);
   }
 
-  function selectTag(item) {
-    return () => {
-      setSessionTag(item);
-      serverLine.patch("profile", { tag: item });
-    };
-  }
-
   function allowScreenshare() {
     initScreenshotCapture(onSuccess, onError, onEnd);
 
     function onEnd() {
+      console.log("DISABLED SCREEN SHARE");
       setScreenshareStatus(false);
       pauseSession();
     }
 
     function onSuccess() {
+      console.log("ENABLED SCREEN SHARE");
       setScreenshareStatus(true);
 
       if (error == "Screenshare Error: Permission denied") {
@@ -512,14 +529,6 @@ export default function SessionPage() {
     }
   }
 
-  function updatePodoro() {
-    let currentIndex = pomodoroOptions.indexOf(pomodoroTimer);
-    currentIndex = currentIndex + 1;
-    if (currentIndex > pomodoroOptions.length - 1) currentIndex = 0;
-
-    setPodoroTimer(pomodoroOptions[currentIndex]);
-  }
-
   function askForWebcam() {
     navigator.mediaDevices.getUserMedia({
       video: {
@@ -553,31 +562,22 @@ export default function SessionPage() {
     return sessData;
   }
 
-  async function makePostAttendanceReq(blob, newSessionData) {
-    let imageUploaded = await compressAndUploadFile(
-      newSessionData.imageToRemove,
-      blob
-    );
-
-    console.log(imageUploaded, getImageURL(imageUploaded.fileName));
-    serverLine.post("/attendance", {
-      newImage: imageUploaded.fileName,
-      sessionTag: sessionTag,
-      imageToRemove: newSessionData.imageToRemove,
-    });
+  async function pushBlob(blob) {
+    if (!window.imageBlobList) window.imageBlobList = [];
+    window.imageBlobList.push(blob);
   }
 
-  function takeScreenshot(newSessionData) {
+  function takeScreenshot() {
     window.captureScreenshot().then((blob, itemURL) => {
       console.log(itemURL);
       console.log("Screenshot captured");
 
       blob.name = "screenshare.jpeg";
-      makePostAttendanceReq(blob, newSessionData);
+      pushBlob(blob);
     });
   }
 
-  function captureWebcamImage(newSessionData) {
+  function captureWebcamImage() {
     let videoDevice = theMediaSteam.getVideoTracks()[0];
     let captureDevice = new ImageCapture(videoDevice);
 
@@ -591,7 +591,7 @@ export default function SessionPage() {
 
           try {
             blob.name = "webcam.jpeg";
-            makePostAttendanceReq(blob, newSessionData);
+            pushBlob(blob);
           } catch (e) {
             return console.log(e);
           }
@@ -600,41 +600,34 @@ export default function SessionPage() {
     }
   }
 
-  async function postAttendance(newSessionData) {
+  async function postAttendance() {
+    console.log("Attempt Posting attendance...", window.screenshareEnabled);
     if (!loggedInUserID) return;
     if (!window.theMediaSteam) return;
-    if (!webcamEnabled) return;
-    if (!screenshareEnabled) return;
+    if (!window.webcamEnabled) return;
 
-    if (window.webcamTurn) {
-      captureWebcamImage(newSessionData);
-    } else {
-      takeScreenshot(newSessionData);
-    }
+    let innerWidth = window.innerWidth;
 
-    window.webcamTurn = window.webcamTurn ? false : true;
+    if (!window.screenshareEnabled && innerWidth > 800) return;
+
+    console.log("Posting attendance");
+
+    captureWebcamImage();
+    takeScreenshot();
+    serverLine.post("/attendance");
   }
 
   function startSession() {
     setSessionStatus("ON");
   }
 
-  function startSessionInit() {
-    if (!router.isReady) return;
-
-    setSessionStatus("ON");
-    const { duration } = router.query;
-
-    setTimer(parseInt(duration) * 60);
-  }
-
   function pauseSession() {
     setSessionStatus("OFF");
   }
 
-  function resetSession() {
-    setSessionStatus("OFF");
-    setTimer(0);
+  function endSession() {
+    setSessionStatus("ENDED");
+    // setTimer(0);
   }
 
   function getTimerButtons() {
@@ -647,23 +640,13 @@ export default function SessionPage() {
             </ButtonIcon>
             <ButtonText>Play</ButtonText>
           </EvenButton>
-          <EvenButton onClick={resetSession}>
+          <EvenButton onClick={endSession}>
             <ButtonIcon>
               <BsStopFill />
             </ButtonIcon>
-            <ButtonText>Stop</ButtonText>
+            <ButtonText>End Session</ButtonText>
           </EvenButton>
         </>
-      );
-
-    if (sessionStatus == "OFF")
-      return (
-        <StartButton onClick={startSessionInit}>
-          <ButtonIcon>
-            <FiPlay />
-          </ButtonIcon>
-          <ButtonText>Start Session</ButtonText>
-        </StartButton>
       );
 
     return (
@@ -674,11 +657,11 @@ export default function SessionPage() {
           </ButtonIcon>
           <ButtonText>Pause</ButtonText>
         </EvenButton>
-        <EvenButton onClick={resetSession}>
+        <EvenButton onClick={endSession}>
           <ButtonIcon>
             <BsStopFill />
           </ButtonIcon>
-          <ButtonText>Stop</ButtonText>
+          <ButtonText>End Session</ButtonText>
         </EvenButton>
       </>
     );

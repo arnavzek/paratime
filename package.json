@@ -47,6 +47,7 @@
     "react-icons": "^4.6.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-line-graph": "^1.0.6",
+    "react-responsive-masonry": "^2.1.7",
     "react-select": "^5.5.2",
     "react-svg-bar-chart": "^1.1.0",
     "request": "^2.88.2",

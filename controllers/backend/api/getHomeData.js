@@ -1,4 +1,5 @@
 import Profile from "../../../database/models/Profile";
+import getPosts from "./getPosts";
 import getUserRankings from "./getUserRankings";
 
 export default async function getHomeData(req, res, next) {
@@ -11,7 +12,7 @@ export default async function getHomeData(req, res, next) {
 
   // let query = { lastSeenInSessionAt: { $gte: queryDate } };
 
-  let rankingData = await getUserRankings(req);
+  let posts = await getPosts(req);
 
-  return res.json({ data: { ...rankingData, me } });
+  return res.json({ data: { ...posts, me } });
 }

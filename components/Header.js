@@ -5,13 +5,11 @@ import styled from "styled-components";
 import Context from "../Context";
 import { serverLine } from "../controllers/frontend/serverLine";
 import Brand from "./Brand";
-import HomeUserBox from "./HomeUserBox";
-import LoadingSection from "./LoadingSection";
-import BarChart from "react-svg-bar-chart";
 import { useState } from "react";
 import { FiSettings } from "react-icons/fi";
 import { FiSearch } from "react-icons/fi";
 import { AiOutlineUser } from "react-icons/ai";
+import { HiOutlineBell } from "react-icons/hi";
 
 const Container = styled.div`
   padding: 20px 20px;
@@ -52,10 +50,26 @@ const Links = styled.div`
 
 const LinkItem = styled.div`
   cursor: pointer;
+  position: relative;
+`;
+
+const NotifIndication = styled.div`
+  height: 8px;
+  width: 8px;
+  border-radius: 50px;
+  background-color: tomato;
+  position: absolute;
+  width: 100%;
+  bottom: -8px;
 `;
 
 export default function Header() {
   const { loggedInUser } = useContext(Context);
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  useEffect(() => {
+    serverLine.get("notifications/?type=count").then(setNotificationCount);
+  }, []);
 
   if (!loggedInUser) return null;
 
@@ -71,6 +85,14 @@ export default function Header() {
         <Link href="/search">
           <LinkItem>
             <FiSearch />
+          </LinkItem>
+        </Link>
+
+        <Link href="/notifications">
+          <LinkItem>
+            <HiOutlineBell />
+
+            {notificationCount ? <NotifIndication /> : null}
           </LinkItem>
         </Link>
 

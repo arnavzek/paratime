@@ -15,17 +15,16 @@ let profile = new mongoose.Schema(
     collegeID: { type: Number, default: 0 },
     googleID: { type: String },
     profileImage: { type: Object },
-    sessionImages: [{ type: String }],
     status: { type: Object },
     dailyUsageStat: { type: Object },
     todaysDuration: { type: Number },
     monthsDuration: { type: Number },
     bio: { type: String },
-    tag: { type: String },
     storageUsage: { type: Number },
     name: { type: String },
     email: { type: String },
     lastSeenInSessionAt: { type: Date },
+    notificationsSeenAt: { type: Date },
   },
   { timestamps: true }
 );

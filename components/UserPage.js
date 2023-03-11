@@ -2,7 +2,9 @@ import { useContext } from "react";
 import styled from "styled-components";
 import Context from "../Context";
 import getImageURL from "../controllers/frontend/getImageURL";
+import toMinsOrHours from "../controllers/frontend/toMinOrHours";
 import FollowButton from "./FollowButton";
+import PostBox from "./PostBox";
 import Stat from "./Stat";
 
 const Container = styled.div`
@@ -62,19 +64,24 @@ const Photo = styled.img`
   }
 `;
 
-export default function UserPage({ user, followStatus }) {
+const Posts = styled.div``;
+const Post = styled.div``;
+const PostTitle = styled.div``;
+const PostContent = styled.div``;
+
+export default function UserPage({ user, followStatus, posts }) {
   return (
     <Container>
       <Details>
         <Name>{user.name}</Name>
         <SmallDetails>
           <Detail>@{user.username}</Detail>
-          <Detail>#{user.tag ? user.tag : "Work"}</Detail>
+
           <Detail>
-            {"Today's Duration"} {user.todaysDuration}
+            {"Today's Duration:"} {toMinsOrHours(user.todaysDuration)}
           </Detail>
           <Detail>
-            {"Month's Duration"} {user.monthsDuration}
+            {"Month's Duration:"} {toMinsOrHours(user.monthsDuration)}
           </Detail>
         </SmallDetails>
         <FollowButton initialStatus={followStatus} receiverUserID={user._id} />
@@ -84,14 +91,20 @@ export default function UserPage({ user, followStatus }) {
         <Stat userData={user} />
       </StatSection>
 
-      <Photos>{renderPhotos()}</Photos>
+      <Posts>{renderPosts()}</Posts>
     </Container>
   );
 
-  function renderPhotos() {
-    let theImages = [...user.sessionImages];
-    theImages = theImages.reverse();
+  function renderPosts() {
+    return posts.map((item) => (
+      <Post>
+        <PostTitle>{item.title}</PostTitle>
+        <PostContent>{renderPhotos(item.images)}</PostContent>
+      </Post>
+    ));
+  }
 
+  function renderPhotos(theImages) {
     theImages = theImages.slice(0, 50);
     return theImages.map((imageItem) => {
       return <Photo key={imageItem} src={getImageURL(imageItem)} />;
