@@ -64,12 +64,17 @@ const NotifIndication = styled.div`
 `;
 
 export default function Header() {
-  const { loggedInUser } = useContext(Context);
+  const { loggedInUser, loggedInUserID } = useContext(Context);
   const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {
     serverLine.get("notifications/?type=count").then(setNotificationCount);
   }, []);
+
+  useEffect(() => {
+    if (loggedInUserID == false && window.location.pathname != "/")
+      window.location.href = window.location.origin;
+  }, [loggedInUserID]);
 
   if (!loggedInUser) return null;
 

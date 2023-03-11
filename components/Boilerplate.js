@@ -30,8 +30,13 @@ function Boilerplate({ children, initialPageData }) {
   useEffect(() => {
     let userID = getUserID();
     window.theRouter = router;
-    setLoggedInUserID(userID);
-  }, [loggedInUser.data]);
+
+    if (userID) {
+      setLoggedInUserID(userID);
+    } else {
+      setLoggedInUserID(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (loggedInUser.error) {

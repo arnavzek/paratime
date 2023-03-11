@@ -79,8 +79,14 @@ export default function Notifications() {
     if (!res) return [];
     if (!res.notifs) return [];
     return res.notifs.map((item) => {
-      let seen = hasSeen(item.createdAt);
+      return getNotif({ item });
+    });
+  }
 
+  function getNotif({ item }) {
+    let seen = hasSeen(item.createdAt);
+
+    if (item.type == "FOLLOW") {
       return (
         <Link href={"/profile/" + item.sender.username}>
           <Notification seen={seen} key={item.id}>
@@ -88,7 +94,23 @@ export default function Notifications() {
           </Notification>
         </Link>
       );
-    });
+    } else if (item.type == "LIKE") {
+      return (
+        <Link href={"/post/" + item.postID}>
+          <Notification seen={seen} key={item.id}>
+            {item.sender.username} started following you
+          </Notification>
+        </Link>
+      );
+    } else {
+      return (
+        <Link href={"/profile/" + item.sender.username}>
+          <Notification seen={seen} key={item.id}>
+            {item.sender.username} - {item.type}
+          </Notification>
+        </Link>
+      );
+    }
   }
 
   function hasSeen(createdAt) {

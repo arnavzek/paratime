@@ -29,7 +29,7 @@ let profile = new mongoose.Schema(
   { timestamps: true }
 );
 
-profile.index({ name: "text", username: "text", username: "bio", tag: "bio" });
+profile.index({ name: "text", username: "text", username: "bio" });
 profile.index({ email: 1 });
 profile.index({ username: 1 });
 profile.index({ tag: 1, todaysDuration: 1 });

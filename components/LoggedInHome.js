@@ -48,7 +48,8 @@ const Padding = styled.div`
 `;
 
 const BoxTitle = styled.h3`
-  font-weight: 300;
+  font-weight: 100;
+  opacity: 0.7;
 `;
 const BoxList = styled.div`
   display: flex;
@@ -165,7 +166,7 @@ export default function LoggedInHome() {
         <BoxList>
           <SessionBox name={30} />
           <SessionBox name={60} />
-          {/* <SessionBox name={120} /> */}
+          <SessionBox name={90} />
         </BoxList>
       </Box>
 
