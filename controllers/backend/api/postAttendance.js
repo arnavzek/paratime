@@ -1,17 +1,10 @@
 import Profile from "../../../database/models/Profile";
 
-let supportedSessionTags = ["work", "study", "programming", "Art"];
-
 export default async function postSessionAttendance(req, res, next) {
   if (!req.user) return next("Please log in first");
   let theUser = await Profile.findOne({ _id: req.user.id });
 
   if (!theUser) return next("User not found");
-  if (!req.body.newImage) return next("Image evidence missing");
-  if (!req.body.sessionTag) return next("sessionTag missing");
-
-  if (!supportedSessionTags.includes(req.body.sessionTag))
-    return next("Invalid Session Tag");
 
   let lastSeenInSessionAt = new Date(theUser.lastSeenInSessionAt);
 
@@ -21,11 +14,9 @@ export default async function postSessionAttendance(req, res, next) {
   let nowInSec = now.getTime() / 1000;
   let timeDiffBtwLastAttendanceAndNow = nowInSec - lastSeenInSessionAtInSec;
 
-  if (timeDiffBtwLastAttendanceAndNow < 10) {
-    return next("Attendance posted too sonn");
-  }
-
-  let newImageList = getNewImageList();
+  // if (timeDiffBtwLastAttendanceAndNow < 10) {
+  //   return next("Attendance posted too sonn");
+  // }
 
   let newDuration = theUser.todaysDuration ? theUser.todaysDuration : 0;
   let newMonthsDuration = theUser.monthsDuration ? theUser.monthsDuration : 0;
@@ -49,40 +40,13 @@ export default async function postSessionAttendance(req, res, next) {
     {
       lastSeenInSessionAt: new Date(),
       todaysDuration: newDuration,
-      sessionImages: newImageList,
+
       monthsDuration: newMonthsDuration,
       dailyUsageStat: newStat,
     }
   );
 
   return res.json({ data: updatedUser });
-
-  function getNewImageList() {
-    let newImageList = [];
-
-    if (theUser.sessionImages) {
-      newImageList = [...theUser.sessionImages];
-
-      if (theUser.imageToRemove) {
-        var theIndex = null;
-
-        newImageList.map((item, index) => {
-          if (item == theUser.imageToRemove) {
-            theIndex = index;
-          }
-        });
-
-        if (theIndex !== null) {
-          newImageList.splice(theIndex, 1);
-        }
-      }
-      // }
-    }
-
-    newImageList.push(req.body.newImage);
-
-    return newImageList;
-  }
 
   function postStat() {
     let newStat = {};
@@ -98,7 +62,7 @@ export default async function postSessionAttendance(req, res, next) {
       today.getMonth() + 1
     }/${today.getDate()}/${today.getFullYear()}`;
 
-    if (!newStat[sessionTag]) {
+    if (!newStat) {
       newStat[sessionTag] = { [dateString]: 1 };
     } else {
       if (newStat[sessionTag][dateString]) {
