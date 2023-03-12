@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import UserBox from "./UserBox";
+
 import { FiPlay } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -32,11 +32,7 @@ const SubTitle = styled.div`
   margin-bottom: 25px;
 `;
 const List = styled.div``;
-const Image = styled.img`
-  width: 300px;
-  width: 300px;
-  object-fit: cover;
-`;
+const Image = styled.img``;
 // import ImageCapture from "image-capture";
 export default function CapturedImages({ imageBlobs }) {
   let newImageBlobs = [...imageBlobs];
