@@ -1,4 +1,5 @@
 import Base from "../../components/Base";
+import PostPage from "../../components/PostPage";
 import UserPage from "../../components/PostPage";
 import WithHeader from "../../components/WithHeader";
 import attachUser from "../../controllers/backend/middlewares/attachUser";
@@ -6,11 +7,11 @@ import Notification from "../../database/models/Notification";
 import Post from "../../database/models/Post";
 import Profile from "../../database/models/Profile";
 
-export default function handle({ followStatus, user, posts }) {
+export default function handle({ postData, user, posts }) {
   return (
     <Base>
       <WithHeader>
-        <UserPage user={user} followStatus={followStatus} posts={posts} />
+        <PostPage postData={postData} />
       </WithHeader>
     </Base>
   );
@@ -23,22 +24,25 @@ export async function getServerSideProps(ctx) {
 
   let id = params.id;
 
-  let user = await Profile.findOne({ username: id });
-
-  let followStatus = await Notification.findOne({
+  let post = await Post.findOne({ username: id });
+  let author = await Profile.findOne({ _id: post.authorUserID });
+  let likeData = await Notification.findOne({
     senderUserID: req.user.id,
-    receiverUserID: user._id,
-    type: "FOLLOW",
-    status: true,
+    subjectID: id,
+    type: "LIKE",
   });
 
-  user = JSON.parse(JSON.stringify(user));
-  followStatus = JSON.parse(JSON.stringify(followStatus));
-  // let user =
+  post = JSON.parse(JSON.stringify(post));
 
-  let posts = await Post.find({ authorUserID: req.user.id });
+  if (likeData.status == true) {
+    post.likeStatus = true;
+  } else {
+    post.likeStatus = false;
+  }
+
+  post.author = author;
 
   return {
-    props: { user, followStatus, posts }, // will be passed to the page component as props
+    props: { postData: post }, // will be passed to the page component as props
   };
 }

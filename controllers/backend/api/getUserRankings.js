@@ -8,11 +8,7 @@ export default async function getUserRankings(req) {
     `${d.getMonth() + 1} / ${d.getDate()}/${d.getFullYear()}`
   );
 
-  let query = { lastSeenInSessionAt: { $gte: queryDate } };
-
-  if (req.query.showByCollege) {
-    query.collegeID = me.collegeID;
-  }
+  // let query = { lastSeenInSessionAt: { $gte: queryDate } };
 
   let following = await Notification.find({
     senderUserID: req.user.id,
@@ -26,10 +22,7 @@ export default async function getUserRankings(req) {
     followingList.push(item.receiverUserID);
   });
 
-  let followingUsers = await Profile.find({ _id: { $in: followingList } }).sort(
-    { todaysDuration: -1 }
-  );
-  let worldWideUsers = await Profile.find(query).sort({ todaysDuration: -1 });
+  let followingUsers = await Profile.find({ _id: { $in: followingList } });
 
-  return { worldWideUsers, followingUsers };
+  return { followingUsers };
 }

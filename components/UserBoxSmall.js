@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import getImageURL from "../controllers/frontend/getImageURL";
 import Link from "next/link";
-import toMinsOrHours from "../controllers/frontend/toMinOrHours";
+import getTodaysDuration from "../controllers/frontend/getTodaysDuration";
+import getMonthsDuration from "../controllers/frontend/getMonthsDuration";
+import getWeeksDuration from "../controllers/frontend/getWeeksDuration";
 
 const Container = styled.div`
   width: calc(100vw - 40px);
@@ -109,8 +110,8 @@ export default function UserBoxSmall({ item }) {
           <Small>Rank {item.rank}</Small>
         </First>
         <SecondLine>
-          <Small>Today: {toMinsOrHours(item.todaysDuration)}</Small>
-          <Small>This Month: {toMinsOrHours(item.monthsDuration)} </Small>
+          <Small>Today: {getTodaysDuration(author.dailyUsageStat)} </Small>
+          <Small>This Week: {getWeeksDuration(author.dailyUsageStat)} </Small>
         </SecondLine>
       </Container>
     </Link>

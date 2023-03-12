@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import UserBox from "./UserBox";
+
 import { FiPlay } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -276,6 +276,7 @@ export default function SessionPage() {
   const [error, setError] = useState(false);
   const [timer, setTimer] = useState(60 * 60);
   const [screenshareEnabled, setScreenshareStatus] = useState(false);
+  const [playCardinalSound, { stop }] = useSound("/cardinal.mp3");
 
   const router = useRouter();
 
@@ -404,8 +405,14 @@ export default function SessionPage() {
 
   if (!sessionData) return <LoadingSection />;
 
-  // if (sessionData == "ENDED")
-  //   return <ContentCreator duration={getDuration()} imageBlobs={imagesBlobs} />;
+  if (sessionStatus == "ENDED")
+    return (
+      <ContentCreator
+        playSound={playCardinalSound}
+        duration={getDuration()}
+        imageBlobs={getImageBlobs()}
+      />
+    );
 
   return (
     <Container>
@@ -627,6 +634,7 @@ export default function SessionPage() {
 
   function endSession() {
     setSessionStatus("ENDED");
+    handleUnmount();
     // setTimer(0);
   }
 

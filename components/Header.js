@@ -72,8 +72,12 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    if (loggedInUserID == false && window.location.pathname != "/")
+    if (
+      loggedInUserID == false &&
+      window.location.pathname.indexOf("session") != -1
+    ) {
       window.location.href = window.location.origin;
+    }
   }, [loggedInUserID]);
 
   if (!loggedInUser) return null;

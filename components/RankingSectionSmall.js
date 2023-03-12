@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import UserBox from "./UserBox";
+
 import { FiPlay } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -17,6 +17,7 @@ import initImageCapture from "../controllers/initImageCapture";
 import getImageURL from "../controllers/frontend/getImageURL";
 import initScreenshotCapture from "../controllers/initScreenshotCapture";
 import UserBoxSmall from "./UserBoxSmall";
+import getWeeksDuration from "../controllers/frontend/getWeeksDuration";
 
 // import ImageCapture from "image-capture";
 
@@ -104,6 +105,7 @@ const Main = styled.div`
 export default function RankingSectionSmall({ followingUsers, me }) {
   const { loggedInUserID } = useContext(Context);
 
+  let ranking = getRanking();
   return (
     <Container>
       <Title>Ranking</Title>
@@ -122,10 +124,13 @@ export default function RankingSectionSmall({ followingUsers, me }) {
 
     let list = followingUsers;
 
-    list.map((item, index) => {
+    list.map((item) => {
       if (item._id !== loggedInUserID)
         users.push(
-          <UserBoxSmall key={item._id} item={{ ...item, rank: index + 1 }} />
+          <UserBoxSmall
+            key={item._id}
+            item={{ ...item, rank: getRank(item._id) }}
+          />
         );
     });
 
@@ -137,22 +142,36 @@ export default function RankingSectionSmall({ followingUsers, me }) {
 
     return {
       ...me,
-      rank: getYouRank(),
+      rank: getRank(loggedInUserID),
       name: "You",
     };
   }
 
-  function getYouRank() {
-    let rank = "NA";
+  function getRank(userID) {
+    let rank = 0;
 
-    let list = followingUsers;
+    for (let item of ranking) {
+      if (item.userID == userID) return rank;
+      rank++;
+    }
 
-    list.map((item, index) => {
-      if (item._id == loggedInUserID) rank = index;
+    return "NA";
+  }
+
+  function getRanking() {
+    let list = [];
+
+    for (let user of followingUsers) {
+      list.push({
+        userID: [user._id],
+        duration: getWeeksDuration(user.dailyUsageStat),
+      });
+    }
+
+    list.sort(function (a, b) {
+      return b.duration - a.duration;
     });
 
-    if (rank !== "NA") rank += 1;
-
-    return rank;
+    return list;
   }
 }

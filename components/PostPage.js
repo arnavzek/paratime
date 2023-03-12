@@ -2,6 +2,9 @@ import { useContext } from "react";
 import styled from "styled-components";
 import Context from "../Context";
 import getImageURL from "../controllers/frontend/getImageURL";
+import getMonthsDuration from "../controllers/frontend/getMonthsDuration";
+import getTodaysDuration from "../controllers/frontend/getTodaysDuration";
+import getWeeksDuration from "../controllers/frontend/getWeeksDuration";
 import toMinsOrHours from "../controllers/frontend/toMinOrHours";
 import FollowButton from "./FollowButton";
 import PostBox from "./PostBox";
@@ -69,45 +72,6 @@ const Post = styled.div``;
 const PostTitle = styled.div``;
 const PostContent = styled.div``;
 
-export default function UserPage({ user, followStatus, posts }) {
-  return (
-    <Container>
-      <Details>
-        <Name>{user.name}</Name>
-        <SmallDetails>
-          <Detail>@{user.username}</Detail>
-
-          <Detail>
-            {"Today's Duration:"} {toMinsOrHours(user.todaysDuration)}
-          </Detail>
-          <Detail>
-            {"Month's Duration:"} {toMinsOrHours(user.monthsDuration)}
-          </Detail>
-        </SmallDetails>
-        <FollowButton initialStatus={followStatus} receiverUserID={user._id} />
-      </Details>
-
-      <StatSection>
-        <Stat userData={user} />
-      </StatSection>
-
-      <Posts>{renderPosts()}</Posts>
-    </Container>
-  );
-
-  function renderPosts() {
-    return posts.map((item) => (
-      <Post>
-        <PostTitle>{item.title}</PostTitle>
-        <PostContent>{renderPhotos(item.images)}</PostContent>
-      </Post>
-    ));
-  }
-
-  function renderPhotos(theImages) {
-    theImages = theImages.slice(0, 50);
-    return theImages.map((imageItem) => {
-      return <Photo key={imageItem} src={getImageURL(imageItem)} />;
-    });
-  }
+export default function PostPage({ postData }) {
+  return <PostBox item={postData} />;
 }

@@ -1,6 +1,6 @@
 import Post from "../../../database/models/Post";
 
-export default async function postSessionAttendance(req, res, next) {
+export default async function postContent(req, res, next) {
   if (!req.user) return next("Please log in first");
 
   if (!req.body.duration) return next("duration missing");
@@ -8,10 +8,10 @@ export default async function postSessionAttendance(req, res, next) {
   if (!req.body.title) return next("title missing");
 
   let post = new Post();
-  post.duration = req.body.duration;
+  post.durationInMins = req.body.durationInMins;
   post.images = req.body.images;
   post.title = req.body.title;
-  await post.save();
+  let newPost = await post.save();
 
-  return res.json({ data: true });
+  return res.json({ data: { id: newPost._id } });
 }

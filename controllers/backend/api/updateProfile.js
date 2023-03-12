@@ -25,7 +25,7 @@ export default async function updateProfile(req, res, next) {
     let allowedFields = {
       name: "string",
       username: "string",
-      tag: "string",
+      instagramHandle: "string",
       bio: "string",
     };
 

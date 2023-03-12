@@ -28,7 +28,7 @@ export default async function openProfileImageEditor({
       selectedFile
     );
     await updateProfile(fileData);
-    return fileData.name;
+    return fileData.fileName;
   } catch (e) {
     setForm();
     console.log(e);

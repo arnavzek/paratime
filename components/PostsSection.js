@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import UserBox from "./UserBox";
+
 import { FiPlay } from "react-icons/fi";
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";

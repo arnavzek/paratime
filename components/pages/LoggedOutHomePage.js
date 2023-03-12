@@ -222,16 +222,16 @@ export default function LoggedOutHomePage() {
         </BrandContainer>
 
         <TextContainer>
-          <Tagline>Virtual Study Room</Tagline>
+          <Tagline>A devlog/studylog/artlog Platform</Tagline>
 
           <Medium>
-            When you are in a study room everyone can see what you are doing so
-            you just can’t procrastinate, Paratime emulates the same by taking
-            screenshot of your screen and photo from your webcam every 30
-            seconds and everyone can see it and you can see what other are
-            doing. Don’t worry about privacy we blur the image just enough to
-            distinguish work from fun while respecting privacy, so your emails
-            won’t be leaked.
+            When you start a session, a timer starts. While the timer is ticking
+            a webcam photo, and a screenshot of your screen is taken. Once the
+            session ends you can turn the session into a post by selecting what
+            images to post and writing your accomplishment for that session. You
+            can also follow your friends, like their session posts, see how many
+            hours they have worked that day/month/week and find your rank
+            against everyone you follow.
           </Medium>
         </TextContainer>
       </Words>

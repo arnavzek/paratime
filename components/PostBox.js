@@ -2,6 +2,8 @@ import styled from "styled-components";
 import getImageURL from "../controllers/frontend/getImageURL";
 import Link from "next/link";
 import toMinsOrHours from "../controllers/frontend/toMinOrHours";
+import { serverLine } from "../controllers/frontend/serverLine";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 
 const Container = styled.div`
   width: calc(100vw - 40px);
@@ -96,6 +98,8 @@ const Small = styled.div`
 `;
 
 export default function PostBox({ item }) {
+  const [likeStatus, setLikeStatus] = useState(item.likeStatus);
+
   let images = [];
 
   let theImages = [...item.images];
@@ -116,11 +120,13 @@ export default function PostBox({ item }) {
         <BottomLabel>
           <First>
             <Name>{author.name}</Name>
+            <Small>
+              Duration: {toMinsOrHours({ unparsedMinutes: item.duration })}
+            </Small>
+            <Button onClick={likePost}>
+              {likeStatus ? <AiFillHeart /> : <AiOutlineHeart />}
+            </Button>
           </First>
-          <SecondLine>
-            <Small>Today: {toMinsOrHours(author.todaysDuration)}</Small>
-            <Small>This Month: {toMinsOrHours(author.monthsDuration)} </Small>
-          </SecondLine>
         </BottomLabel>
         <BottomLabel>
           <First>{item.title}</First>
@@ -128,4 +134,9 @@ export default function PostBox({ item }) {
       </Container>
     </Link>
   );
+
+  function likePost() {
+    setLikeStatus(!likeStatus);
+    serverLine.post("like", { postID: item._id });
+  }
 }

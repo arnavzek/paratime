@@ -12,26 +12,14 @@ export default async function postSessionAttendance(req, res, next) {
 
   let now = new Date();
   let nowInSec = now.getTime() / 1000;
-  let timeDiffBtwLastAttendanceAndNow = nowInSec - lastSeenInSessionAtInSec;
+  // let timeDiffBtwLastAttendanceAndNow = nowInSec - lastSeenInSessionAtInSec;
 
-  // if (timeDiffBtwLastAttendanceAndNow < 10) {
+  // if (timeDiffBtwLastAttendanceAndNow < 30) {
   //   return next("Attendance posted too sonn");
   // }
 
-  let newDuration = theUser.todaysDuration ? theUser.todaysDuration : 0;
-  let newMonthsDuration = theUser.monthsDuration ? theUser.monthsDuration : 0;
-  //300s = 5 minutes
-  if (lastSeenInSessionAt.getDate() == now.getDate()) {
-    newDuration += 1;
-  } else {
-    newDuration = 0;
-  }
-
-  if (lastSeenInSessionAt.getMonth() == now.getMonth()) {
-    newMonthsDuration += 1;
-  } else {
-    newMonthsDuration = 0;
-  }
+  let newDuration = theUser.totalDuration ? theUser.totalDuration : 0;
+  newDuration += 1;
 
   let newStat = postStat();
 
@@ -39,9 +27,8 @@ export default async function postSessionAttendance(req, res, next) {
     { _id: req.user.id },
     {
       lastSeenInSessionAt: new Date(),
-      todaysDuration: newDuration,
+      totalDuration: newDuration,
 
-      monthsDuration: newMonthsDuration,
       dailyUsageStat: newStat,
     }
   );
@@ -55,20 +42,18 @@ export default async function postSessionAttendance(req, res, next) {
       newStat = JSON.parse(JSON.stringify(theUser.dailyUsageStat));
     }
 
-    let sessionTag = "WORK";
-
     let today = new Date();
     let dateString = `${
       today.getMonth() + 1
     }/${today.getDate()}/${today.getFullYear()}`;
 
     if (!newStat) {
-      newStat[sessionTag] = { [dateString]: 1 };
+      newStat = { [dateString]: 1 };
     } else {
-      if (newStat[sessionTag][dateString]) {
-        newStat[sessionTag][dateString] += 1;
+      if (newStat[dateString]) {
+        newStat[dateString] += 1;
       } else {
-        newStat[sessionTag][dateString] = 1;
+        newStat[dateString] = 1;
       }
     }
     console.log(dateString, newStat);

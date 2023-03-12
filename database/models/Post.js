@@ -8,6 +8,7 @@ let post = new mongoose.Schema(
     likeCount: { type: Number },
     title: { type: String },
     images: [{ type: String }],
+    durationInMins: { type: Number },
   },
   { timestamps: true }
 );

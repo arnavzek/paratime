@@ -12,13 +12,12 @@ let profile = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    collegeID: { type: Number, default: 0 },
+    instagramHandle: { type: String },
     googleID: { type: String },
     profileImage: { type: Object },
     status: { type: Object },
     dailyUsageStat: { type: Object },
-    todaysDuration: { type: Number },
-    monthsDuration: { type: Number },
+    totalDuration: { type: Number },
     bio: { type: String },
     storageUsage: { type: Number },
     name: { type: String },
@@ -32,10 +31,6 @@ let profile = new mongoose.Schema(
 profile.index({ name: "text", username: "text", username: "bio" });
 profile.index({ email: 1 });
 profile.index({ username: 1 });
-profile.index({ tag: 1, todaysDuration: 1 });
-profile.index({ tag: 1, monthsDuration: 1 });
-profile.index({ todaysDuration: 1 });
-profile.index({ monthsDuration: 1 });
 
 profile.methods.generateToken = function (aliasID) {
   let JWT_payload = {

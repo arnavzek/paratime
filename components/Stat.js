@@ -63,20 +63,18 @@ export default function Stat({ userData }) {
 
     for (let key in userData.dailyUsageStat) {
       let item = userData.dailyUsageStat[key];
-      for (let key2 in item) {
-        let date = new Date(key2);
-        if (thisMonth !== date.getMonth()) continue;
+      let date = new Date(key);
+      if (thisMonth !== date.getMonth()) continue;
 
-        let item1 = item[key2] / 2;
-        let item2 = item1.toFixed(2);
-        // data.push({ x: date.getDate(), y: item2 });
-        // data.push({ x: Math.random() * 30, y: Math.random() * 30 });
-        // data.push({ x: Math.random() * 30, y: Math.random() * 30 });
-        // data.push({ x: Math.random() * 30, y: Math.random() * 30 });
-        data.push([date.getDate(), item2]);
-        // data.push([Math.random() * 30, Math.random() * 30]);
-        console.log(item1);
-      }
+      let item1 = parseInt(item);
+      let item2 = item1.toFixed(2);
+      // data.push({ x: date.getDate(), y: item2 });
+      // data.push({ x: Math.random() * 30, y: Math.random() * 30 });
+      // data.push({ x: Math.random() * 30, y: Math.random() * 30 });
+      // data.push({ x: Math.random() * 30, y: Math.random() * 30 });
+      data.push([date.getDate(), item2]);
+      // data.push([Math.random() * 30, Math.random() * 30]);
+      console.log(item1);
     }
 
     return data;

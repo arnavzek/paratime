@@ -2,7 +2,7 @@ import WithHeader from "./WithHeader";
 import { FiSearch } from "react-icons/fi";
 import { serverLine } from "../controllers/frontend/serverLine";
 import LoadingSection from "./LoadingSection";
-import UserBox from "./UserBox";
+
 import styled from "styled-components";
 import { useState } from "react";
 import { useEffect } from "react";

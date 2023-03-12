@@ -1,6 +1,7 @@
 import Notification from "../../../database/models/Notification";
 import Post from "../../../database/models/Post";
 import Profile from "../../../database/models/Profile";
+import attachLikeData from "./attachLikeData";
 
 export default async function getPosts(req) {
   let following = await Notification.find({
@@ -82,8 +83,11 @@ export default async function getPosts(req) {
     },
   ]);
 
+  let posts = [...followingPosts, ...worldWidePosts];
+
+  posts = await attachLikeData({ req, posts });
   return {
-    posts: [...followingPosts, ...worldWidePosts],
+    posts: posts,
     followingUsers: following,
   };
 }
